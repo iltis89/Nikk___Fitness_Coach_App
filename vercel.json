@@ -1,12 +1,6 @@
 {
-  "buildCommand": "cd apps/trainer-dashboard && npm install && npm run build",
+  "buildCommand": "npm run build",
   "outputDirectory": "apps/trainer-dashboard/.next",
   "installCommand": "npm install",
-  "framework": null,
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/apps/trainer-dashboard/$1"
-    }
-  ]
+  "framework": null
 }
