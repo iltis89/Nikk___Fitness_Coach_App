@@ -33,10 +33,10 @@ export default function TempoTimer({ tempo, isActive, onPhaseChange }: TempoTime
   };
   
   const phaseDurations = {
-    eccentric: parsed.eccentric === -1 ? 0 : parsed.eccentric,
-    pause1: parsed.pause1 === -1 ? 0 : parsed.pause1,
-    concentric: parsed.concentric === -1 ? 0 : parsed.concentric,
-    pause2: parsed.pause2 === -1 ? 0 : parsed.pause2,
+    eccentric: parsed?.eccentric === -1 ? 0 : (parsed?.eccentric || 0),
+    pause1: parsed?.pause1 === -1 ? 0 : (parsed?.pause1 || 0),
+    concentric: parsed?.concentric === -1 ? 0 : (parsed?.concentric || 0),
+    pause2: parsed?.pause2 === -1 ? 0 : (parsed?.pause2 || 0),
   };
   
   useEffect(() => {
