@@ -326,18 +326,33 @@ export default function ClientTrainingPage() {
                       <div>
                         <h3 className="font-medium text-gray-900">{workout.name}</h3>
                         <p className="text-sm text-gray-500 mt-1">
-                          {workout.exercises} Übungen • {workout.duration}
+                          {workout.description}
                         </p>
+                        <p className="text-sm text-gray-600 mt-2">
+                          {workout.exercises} Übungen • {workout.sets} Sätze • {workout.duration}
+                        </p>
+                        {workout.features && (
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {workout.features.map((feature, idx) => (
+                              <span key={idx} className="text-xs px-2 py-1 bg-primary-100 text-primary-700 rounded">
+                                {feature}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
                       <div className="flex items-center space-x-4">
                         <div className="text-right">
                           <p className="text-sm font-medium text-gray-900">{workout.timesCompleted}x</p>
                           <p className="text-xs text-gray-500">absolviert</p>
                         </div>
-                        <button className="btn-primary">
+                        <Link 
+                          href={`/dashboard/training-plans/client/${params.id}/workout/${workout.id}`}
+                          className="btn-primary inline-flex items-center"
+                        >
                           <PlayIcon className="mr-2 h-5 w-5" />
                           Starten
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </div>

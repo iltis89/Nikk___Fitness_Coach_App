@@ -13,51 +13,17 @@ import {
 const clients = [
   {
     id: 1,
-    name: 'Max Mustermann',
-    age: 35,
+    name: 'Demo Kunde',
+    age: 30,
     activePlans: 1,
-    currentPlan: 'Muskelaufbau Anfänger',
-    lastWorkout: '2024-01-20',
-    weeklyProgress: 3,
-    weeklyGoal: 3,
-    nextWorkout: 'Workout B - Oberkörper',
-    status: 'active',
-  },
-  {
-    id: 2,
-    name: 'Anna Schmidt',
-    age: 28,
-    activePlans: 1,
-    currentPlan: 'Fettabbau Programm',
-    lastWorkout: '2024-01-19',
+    currentPlan: 'Advanced Training - Nikk Method',
+    lastWorkout: '2025-01-20',
     weeklyProgress: 2,
     weeklyGoal: 4,
-    nextWorkout: 'HIIT Zirkel',
+    nextWorkout: 'Woche 1 - Tag 3',
     status: 'active',
-  },
-  {
-    id: 3,
-    name: 'Tom Weber',
-    age: 42,
-    activePlans: 0,
-    currentPlan: null,
-    lastWorkout: '2024-01-10',
-    weeklyProgress: 0,
-    weeklyGoal: 0,
-    nextWorkout: null,
-    status: 'inactive',
-  },
-  {
-    id: 4,
-    name: 'Lisa Müller',
-    age: 31,
-    activePlans: 2,
-    currentPlan: 'Athletik Training',
-    lastWorkout: '2024-01-21',
-    weeklyProgress: 4,
-    weeklyGoal: 5,
-    nextWorkout: 'Workout D - Kondition',
-    status: 'active',
+    trainingStyle: 'Hypertrophie mit Supersätzen',
+    currentPhase: 'Aufbauphase',
   },
 ];
 
@@ -136,6 +102,7 @@ export default function TrainingPlansPage() {
                     <div>
                       <p className="text-xs text-gray-500">Aktueller Plan</p>
                       <p className="text-sm font-medium text-gray-900">{client.currentPlan}</p>
+                      <p className="text-xs text-gray-600 mt-1">{client.trainingStyle} • {client.currentPhase}</p>
                     </div>
                     
                     <div>

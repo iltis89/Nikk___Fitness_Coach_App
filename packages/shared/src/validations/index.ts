@@ -44,6 +44,9 @@ export const WorkoutExerciseSchema = z.object({
   notes: z.string().optional(),
 });
 
+// Export advanced training validations
+export * from './training';
+
 // Appointment validation
 export const CreateAppointmentSchema = z.object({
   clientId: z.string(),

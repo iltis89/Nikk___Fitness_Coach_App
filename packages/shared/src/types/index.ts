@@ -18,19 +18,51 @@ export interface Client extends User {
 export interface Measurement {
   id: string;
   clientId: string;
+  trainerId: string;
   date: Date;
+  
+  // Grundmessungen
   weight?: number;
+  height?: number;
+  
+  // Berechnete Werte
   bodyFatPercent?: number;
-  // Hautfaltenmessungen
-  biceps?: number;
+  muscleMass?: number;
+  bmi?: number;
+  
+  // YPSI Hautfaltenmessungen (14 Punkte)
+  chest?: number;
   triceps?: number;
   subscapular?: number;
+  midaxillary?: number;
   suprailiac?: number;
   abdominal?: number;
   thigh?: number;
-  chest?: number;
+  lowerBack?: number;
+  calf?: number;
+  chin?: number;
+  cheek?: number;
+  hamstring?: number;
+  quad?: number;
+  knee?: number;
+  
+  // Umfangsmessungen
+  neckCircumference?: number;
+  shoulderCircumference?: number;
+  chestCircumference?: number;
+  waistCircumference?: number;
+  hipCircumference?: number;
+  armCircumference?: number;
+  thighCircumference?: number;
+  calfCircumference?: number;
+  
+  // Zusätzliche Daten
+  totalSkinfold?: number;
+  notes?: string;
+  photos?: string[];
 }
 
+// Legacy types - will be deprecated
 export interface TrainingPlan {
   id: string;
   clientId: string;
@@ -39,19 +71,19 @@ export interface TrainingPlan {
   startDate: Date;
   endDate?: Date;
   isActive: boolean;
-  workouts: Workout[];
+  workouts: LegacyWorkout[];
 }
 
-export interface Workout {
+export interface LegacyWorkout {
   id: string;
   name: string;
   dayOfWeek?: number;
-  exercises: WorkoutExercise[];
+  exercises: LegacyWorkoutExercise[];
 }
 
-export interface WorkoutExercise {
+export interface LegacyWorkoutExercise {
   id: string;
-  exercise: Exercise;
+  exercise: LegacyExercise;
   sets: number;
   reps: string;
   rest?: number;
@@ -59,7 +91,7 @@ export interface WorkoutExercise {
   notes?: string;
 }
 
-export interface Exercise {
+export interface LegacyExercise {
   id: string;
   name: string;
   category: string;
@@ -71,3 +103,6 @@ export interface Exercise {
   videoUrl?: string;
   imageUrls: string[];
 }
+
+// Export new advanced training types
+export * from './training';

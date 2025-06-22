@@ -17,7 +17,7 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
   { name: 'Kunden', href: '/dashboard/clients', icon: UsersIcon },
   { name: 'Messungen', href: '/dashboard/measurements', icon: ChartBarIcon },
-  { name: 'Trainingspläne', href: '/dashboard/training-plans', icon: DocumentTextIcon },
+  { name: 'Training', href: '/dashboard/training-plans', icon: DocumentTextIcon },
   { name: 'Kalender', href: '/dashboard/calendar', icon: CalendarIcon },
   { name: 'Nachrichten', href: '/dashboard/messages', icon: ChatBubbleLeftRightIcon },
   { name: 'Einstellungen', href: '/dashboard/settings', icon: Cog6ToothIcon },

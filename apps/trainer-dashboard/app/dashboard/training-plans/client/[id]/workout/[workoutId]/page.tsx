@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { 
@@ -17,124 +17,241 @@ import {
   VideoCameraIcon,
   InformationCircleIcon
 } from '@heroicons/react/24/outline';
+import { groupExercisesBySupersets, parseTempoString } from '@/app/utils/training-helpers';
 
+// Beispiel-Workout mit neuen Features (wie aus Nikks Excel)
 const workout = {
   id: 'a',
-  name: 'Workout A - Unterkörper',
-  description: 'Fokus auf Beine und Gesäß mit Grundübungen',
+  name: 'Woche 1 - Tag 1',
+  date: '8/3',
+  description: 'Unterkörper-fokussiertes Training mit Supersätzen',
   estimatedDuration: 60,
   exercises: [
     {
-      id: 1,
-      name: 'Kniebeuge',
-      sets: 4,
-      reps: '8-10',
-      weight: 80,
-      rest: 180,
+      id: '1',
+      exerciseId: 'squat-1',
+      exercise: {
+        id: 'squat-1',
+        name: 'Langhantel Kniebeuge Fersen Erhöht',
+        category: 'Beine',
+        equipment: 'Langhantel',
+        muscleGroups: ['Quadrizeps', 'Gesäß', 'Core'],
+        variations: ['Fersen erhöht'],
+      },
+      supersetGroup: 'A1',
+      orderInSuperset: 1,
+      orderInWorkout: 1,
+      tempo: '4/0/1/0',
+      restSeconds: 90,
       notes: 'Langsame, kontrollierte Bewegung',
-      videoUrl: '#',
-      muscleGroups: ['Quadrizeps', 'Gesäß', 'Core'],
-      equipment: 'Langhantel',
-      previousWeight: 75,
-      previousReps: [8, 8, 7, 6],
+      sets: [
+        { setNumber: 1, targetReps: 6, targetWeight: 20, completed: false },
+        { setNumber: 2, targetReps: 8, targetWeight: 25, completed: false },
+        { setNumber: 3, targetReps: 8, targetWeight: 30, completed: false },
+      ],
     },
     {
-      id: 2,
-      name: 'Rumänisches Kreuzheben',
-      sets: 3,
-      reps: '10-12',
-      weight: 60,
-      rest: 120,
-      notes: 'Fokus auf Hüftbeugung',
-      videoUrl: '#',
-      muscleGroups: ['Hamstrings', 'Gesäß', 'Unterer Rücken'],
-      equipment: 'Langhantel',
-      previousWeight: 60,
-      previousReps: [10, 10, 9],
+      id: '2',
+      exerciseId: 'bench-1',
+      exercise: {
+        id: 'bench-1',
+        name: '30° KH Schrägbank drücken neutral Bamboo Bench',
+        category: 'Brust',
+        equipment: 'Kurzhanteln',
+        muscleGroups: ['Brust', 'Schultern', 'Trizeps'],
+        variations: ['Bamboo Bench'],
+      },
+      supersetGroup: 'A2',
+      orderInSuperset: 2,
+      orderInWorkout: 2,
+      tempo: 'H/0/0/H',
+      restSeconds: 90,
+      sets: [
+        { setNumber: 1, targetReps: 8, targetWeight: 7.5, completed: false },
+        { setNumber: 2, targetReps: 8, targetWeight: 10, completed: false },
+        { setNumber: 3, targetReps: 8, targetWeight: 12.5, completed: false },
+      ],
     },
     {
-      id: 3,
-      name: 'Beinpresse',
-      sets: 3,
-      reps: '12-15',
-      weight: 120,
-      rest: 90,
-      notes: 'Füße schulterbreit',
-      videoUrl: '#',
-      muscleGroups: ['Quadrizeps', 'Gesäß'],
-      equipment: 'Beinpresse Maschine',
-      previousWeight: 110,
-      previousReps: [15, 14, 12],
+      id: '3',
+      exerciseId: 'split-1',
+      exercise: {
+        id: 'split-1',
+        name: 'Front Foot Elevated Split Squat',
+        category: 'Beine',
+        equipment: 'Körpergewicht',
+        muscleGroups: ['Quadrizeps', 'Gesäß', 'Core'],
+        unilateral: true,
+      },
+      supersetGroup: 'B1',
+      orderInSuperset: 1,
+      orderInWorkout: 3,
+      tempo: '4/0/1/0',
+      restSeconds: 75,
+      sets: [
+        { setNumber: 1, targetReps: '5 p S', targetWeight: 0, completed: false },
+        { setNumber: 2, targetReps: '7 p S', targetWeight: 0, completed: false },
+        { setNumber: 3, targetReps: '8 p S', targetWeight: 0, completed: false },
+      ],
     },
     {
-      id: 4,
-      name: 'Ausfallschritte',
-      sets: 3,
-      reps: '10 pro Bein',
-      weight: 20,
-      rest: 90,
-      notes: 'Alternierend',
-      videoUrl: '#',
-      muscleGroups: ['Quadrizeps', 'Gesäß', 'Core'],
-      equipment: 'Kurzhanteln',
-      previousWeight: 20,
-      previousReps: [10, 10, 9],
+      id: '4',
+      exerciseId: 'row-1',
+      exercise: {
+        id: 'row-1',
+        name: 'Rudern m. Seil z. Hals proniert',
+        category: 'Rücken',
+        equipment: 'Kabelzug',
+        muscleGroups: ['Oberer Rücken', 'Hintere Schultern'],
+      },
+      supersetGroup: 'B2',
+      orderInSuperset: 2,
+      orderInWorkout: 4,
+      tempo: '3/0/1/2',
+      restSeconds: 75,
+      sets: [
+        { setNumber: 1, targetReps: 10, targetWeight: 80, equipmentSetting: 'Stufe 4', completed: false },
+        { setNumber: 2, targetReps: 10, targetWeight: 90, equipmentSetting: 'Stufe 4', completed: false },
+        { setNumber: 3, targetReps: 10, targetWeight: 100, equipmentSetting: 'Stufe 4', completed: false },
+      ],
     },
     {
-      id: 5,
-      name: 'Wadenheben',
-      sets: 4,
-      reps: '15-20',
-      weight: 40,
-      rest: 60,
-      notes: 'Volle Bewegungsamplitude',
-      videoUrl: '#',
-      muscleGroups: ['Waden'],
-      equipment: 'Kurzhanteln',
-      previousWeight: 35,
-      previousReps: [20, 18, 16, 15],
-    },
-    {
-      id: 6,
-      name: 'Plank',
-      sets: 3,
-      reps: '60 Sek',
-      weight: 0,
-      rest: 60,
-      notes: 'Körperspannung halten',
-      videoUrl: '#',
-      muscleGroups: ['Core'],
-      equipment: 'Körpergewicht',
-      previousWeight: 0,
-      previousReps: [60, 55, 50],
+      id: '5',
+      exerciseId: 'curl-1',
+      exercise: {
+        id: 'curl-1',
+        name: 'Reverse SZ Curl',
+        category: 'Arme',
+        equipment: 'SZ-Stange',
+        muscleGroups: ['Bizeps', 'Unterarme'],
+      },
+      supersetGroup: 'C',
+      orderInWorkout: 5,
+      tempo: '3/1/1/0',
+      restSeconds: 120,
+      sets: [
+        { setNumber: 1, targetReps: '6-8', targetWeight: 15, completed: false },
+        { setNumber: 2, targetReps: '6-8', targetWeight: 15, completed: false },
+      ],
     },
   ],
 };
 
+interface TempoTimerProps {
+  tempo: string;
+  isActive: boolean;
+  currentPhase: 'ready' | 'eccentric' | 'pause1' | 'concentric' | 'pause2';
+}
+
+function TempoTimer({ tempo, isActive, currentPhase }: TempoTimerProps) {
+  const parsed = parseTempoString(tempo);
+  if (!parsed) return null;
+
+  const phaseNames = {
+    ready: 'Bereit',
+    eccentric: 'Ablassen',
+    pause1: 'Halten',
+    concentric: 'Drücken/Ziehen',
+    pause2: 'Halten'
+  };
+
+  const phaseColors = {
+    ready: 'bg-gray-200',
+    eccentric: 'bg-red-500',
+    pause1: 'bg-yellow-500',
+    concentric: 'bg-green-500',
+    pause2: 'bg-yellow-500'
+  };
+
+  return (
+    <div className="mt-2 p-3 bg-gray-50 rounded-lg">
+      <div className="text-xs text-gray-600 mb-2">Tempo: {tempo}</div>
+      <div className="flex space-x-1">
+        <div className={`flex-1 h-2 rounded ${currentPhase === 'eccentric' ? phaseColors.eccentric : 'bg-gray-300'}`} />
+        <div className={`flex-1 h-2 rounded ${currentPhase === 'pause1' ? phaseColors.pause1 : 'bg-gray-300'}`} />
+        <div className={`flex-1 h-2 rounded ${currentPhase === 'concentric' ? phaseColors.concentric : 'bg-gray-300'}`} />
+        <div className={`flex-1 h-2 rounded ${currentPhase === 'pause2' ? phaseColors.pause2 : 'bg-gray-300'}`} />
+      </div>
+      <div className="text-center mt-1 text-sm font-medium">
+        {phaseNames[currentPhase]}
+      </div>
+    </div>
+  );
+}
+
 export default function WorkoutDetailPage() {
   const params = useParams();
   const [isActive, setIsActive] = useState(false);
-  const [currentExercise, setCurrentExercise] = useState(0);
-  const [currentSet, setCurrentSet] = useState(0);
-  const [timer, setTimer] = useState(0);
+  const [restTimer, setRestTimer] = useState(0);
+  const [isResting, setIsResting] = useState(false);
+  const [sessionTimer, setSessionTimer] = useState(0);
   const [completedSets, setCompletedSets] = useState<{[key: string]: boolean[]}>({});
-  const [actualWeights, setActualWeights] = useState<{[key: number]: number}>({});
-  const [actualReps, setActualReps] = useState<{[key: string]: number}>({});
+  const [workoutData, setWorkoutData] = useState(workout);
+  const [currentTempoPhase, setCurrentTempoPhase] = useState<'ready' | 'eccentric' | 'pause1' | 'concentric' | 'pause2'>('ready');
+  
+  // Group exercises by supersets
+  const supersetGroups = groupExercisesBySupersets(workout.exercises);
 
-  const handleSetComplete = (exerciseId: number, setIndex: number) => {
-    const key = `${exerciseId}`;
+  // Rest timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isResting && restTimer > 0) {
+      interval = setInterval(() => {
+        setRestTimer(prev => prev - 1);
+      }, 1000);
+    } else if (restTimer === 0) {
+      setIsResting(false);
+    }
+    return () => clearInterval(interval);
+  }, [isResting, restTimer]);
+
+  // Session timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isActive) {
+      interval = setInterval(() => {
+        setSessionTimer(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isActive]);
+
+  const handleSetComplete = (exerciseId: string, setIndex: number) => {
+    const key = exerciseId;
     const current = completedSets[key] || [];
     current[setIndex] = true;
     setCompletedSets({ ...completedSets, [key]: current });
+    
+    // Start rest timer
+    const exercise = workout.exercises.find(e => e.id === exerciseId);
+    if (exercise) {
+      setRestTimer(exercise.restSeconds);
+      setIsResting(true);
+    }
   };
 
-  const adjustWeight = (exerciseId: number, delta: number) => {
-    const current = actualWeights[exerciseId] || workout.exercises.find(e => e.id === exerciseId)?.weight || 0;
-    setActualWeights({ ...actualWeights, [exerciseId]: Math.max(0, current + delta) });
+  const adjustWeight = (exerciseId: string, setIndex: number, delta: number) => {
+    setWorkoutData(prev => ({
+      ...prev,
+      exercises: prev.exercises.map(ex => 
+        ex.id === exerciseId 
+          ? {
+              ...ex,
+              sets: ex.sets.map((set, idx) => 
+                idx === setIndex 
+                  ? { ...set, targetWeight: Math.max(0, set.targetWeight + delta) }
+                  : set
+              )
+            }
+          : ex
+      )
+    }));
   };
 
-  const getActualWeight = (exerciseId: number) => {
-    return actualWeights[exerciseId] || workout.exercises.find(e => e.id === exerciseId)?.weight || 0;
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -149,13 +266,21 @@ export default function WorkoutDetailPage() {
           </Link>
           <div>
             <h1 className="text-2xl font-semibold text-gray-900">{workout.name}</h1>
-            <p className="text-sm text-gray-500">{workout.description}</p>
+            <p className="text-sm text-gray-500">{workout.date} • {workout.description}</p>
           </div>
         </div>
         <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <ClockIcon className="h-5 w-5" />
-            <span>{timer > 0 ? `${Math.floor(timer / 60)}:${(timer % 60).toString().padStart(2, '0')}` : `~${workout.estimatedDuration} Min`}</span>
+          <div className="flex items-center space-x-4">
+            {isResting && (
+              <div className="flex items-center space-x-2 text-sm bg-amber-100 text-amber-800 px-3 py-1 rounded-lg">
+                <ClockIcon className="h-5 w-5" />
+                <span>Pause: {formatTime(restTimer)}</span>
+              </div>
+            )}
+            <div className="flex items-center space-x-2 text-sm text-gray-600">
+              <ClockIcon className="h-5 w-5" />
+              <span>{isActive ? formatTime(sessionTimer) : `~${workout.estimatedDuration} Min`}</span>
+            </div>
           </div>
           {!isActive ? (
             <button 
@@ -179,110 +304,128 @@ export default function WorkoutDetailPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-4">
-          {workout.exercises.map((exercise, index) => {
-            const isCurrentExercise = currentExercise === index;
-            const exerciseKey = `${exercise.id}`;
-            const setsCompleted = completedSets[exerciseKey] || [];
+          {Array.from(supersetGroups.entries()).map(([group, exercises]) => {
+            const isSuperset = !group.startsWith('single_');
             
             return (
-              <div 
-                key={exercise.id}
-                className={`card ${isCurrentExercise && isActive ? 'ring-2 ring-primary-500' : ''}`}
-              >
+              <div key={group} className="card">
                 <div className="card-body">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
+                  {isSuperset && (
+                    <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        {index + 1}. {exercise.name}
+                        Supersatz {group.replace(/[0-9]/g, '')}
                       </h3>
-                      <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500">
-                        <span>{exercise.equipment}</span>
-                        <span>•</span>
-                        <span>{exercise.muscleGroups.join(', ')}</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <button className="p-1 hover:bg-gray-100 rounded transition-colors">
-                        <VideoCameraIcon className="h-5 w-5 text-gray-600" />
-                      </button>
-                      <button className="p-1 hover:bg-gray-100 rounded transition-colors">
-                        <InformationCircleIcon className="h-5 w-5 text-gray-600" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                    <div>
-                      <p className="text-xs text-gray-500">Sätze</p>
-                      <p className="text-base font-semibold text-gray-900">{exercise.sets}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Wiederholungen</p>
-                      <p className="text-base font-semibold text-gray-900">{exercise.reps}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Gewicht</p>
-                      <div className="flex items-center space-x-1">
-                        <button 
-                          onClick={() => adjustWeight(exercise.id, -2.5)}
-                          className="p-0.5 hover:bg-gray-100 rounded"
-                        >
-                          <MinusIcon className="h-4 w-4 text-gray-600" />
-                        </button>
-                        <p className="text-base font-semibold text-gray-900 min-w-[40px] text-center">
-                          {getActualWeight(exercise.id)} kg
-                        </p>
-                        <button 
-                          onClick={() => adjustWeight(exercise.id, 2.5)}
-                          className="p-0.5 hover:bg-gray-100 rounded"
-                        >
-                          <PlusIcon className="h-4 w-4 text-gray-600" />
-                        </button>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Pause</p>
-                      <p className="text-base font-semibold text-gray-900">{exercise.rest}s</p>
-                    </div>
-                  </div>
-
-                  {exercise.notes && (
-                    <div className="mb-4 p-3 bg-amber-50 rounded-lg">
-                      <p className="text-sm text-amber-800">💡 {exercise.notes}</p>
+                      <span className="text-sm text-gray-500">
+                        {exercises.length} Übungen • Pause: {exercises[0].restSeconds}s
+                      </span>
                     </div>
                   )}
-
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Sätze</span>
-                      <span className="text-gray-600">Letztes Mal: {exercise.previousWeight}kg</span>
-                    </div>
-                    <div className="grid grid-cols-4 gap-2">
-                      {Array.from({ length: exercise.sets }).map((_, setIndex) => (
-                        <button
-                          key={setIndex}
-                          onClick={() => handleSetComplete(exercise.id, setIndex)}
-                          className={`
-                            p-3 rounded-lg border-2 transition-all
-                            ${setsCompleted[setIndex] 
-                              ? 'bg-success text-white border-success' 
-                              : 'bg-white border-gray-200 hover:border-gray-300'
-                            }
-                          `}
-                        >
-                          <div className="text-center">
-                            <p className="text-xs">Satz {setIndex + 1}</p>
-                            <p className="font-semibold">
-                              {setsCompleted[setIndex] ? (
-                                <CheckIcon className="h-5 w-5 mx-auto" />
-                              ) : (
-                                exercise.reps
+                  
+                  <div className={`space-y-${isSuperset ? '6' : '0'}`}>
+                    {exercises.map((exercise) => {
+                      const exerciseKey = exercise.id;
+                      const setsCompleted = completedSets[exerciseKey] || [];
+                      
+                      return (
+                        <div key={exercise.id} className={isSuperset ? 'border-l-4 border-primary-200 pl-4' : ''}>
+                          <div className="mb-4">
+                            <h4 className="font-medium text-gray-900">
+                              {exercise.supersetGroup && `${exercise.supersetGroup}: `}
+                              {exercise.exercise?.name}
+                            </h4>
+                            
+                            <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-gray-500">
+                              <span>{exercise.exercise?.equipment}</span>
+                              <span>•</span>
+                              <span>{exercise.exercise?.muscleGroups.join(', ')}</span>
+                              {exercise.tempo && (
+                                <>
+                                  <span>•</span>
+                                  <span className="flex items-center">
+                                    <ClockIcon className="h-4 w-4 mr-1" />
+                                    Tempo: {exercise.tempo}
+                                  </span>
+                                </>
                               )}
-                            </p>
+                            </div>
+                            
+                            {exercise.exercise?.variations && (
+                              <div className="mt-2">
+                                {exercise.exercise.variations.map(v => (
+                                  <span key={v} className="inline-block px-2 py-0.5 text-xs bg-primary-100 text-primary-700 rounded mr-1">
+                                    {v}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            
+                            {exercise.notes && (
+                              <div className="mt-2 p-2 bg-amber-50 rounded text-sm text-amber-800">
+                                <InformationCircleIcon className="h-4 w-4 inline mr-1" />
+                                {exercise.notes}
+                              </div>
+                            )}
+                            
+                            {exercise.tempo && isActive && (
+                              <TempoTimer 
+                                tempo={exercise.tempo} 
+                                isActive={isActive} 
+                                currentPhase={currentTempoPhase}
+                              />
+                            )}
                           </div>
-                        </button>
-                      ))}
-                    </div>
+                          
+                          <div className="space-y-2">
+                            {exercise.sets.map((set, setIndex) => (
+                              <div key={setIndex} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div className="flex items-center space-x-4">
+                                  <span className="text-sm font-medium text-gray-700">
+                                    Satz {set.setNumber}
+                                  </span>
+                                  <span className="text-sm text-gray-600">
+                                    {set.targetReps} Wdh
+                                  </span>
+                                  <div className="flex items-center">
+                                    <button
+                                      onClick={() => adjustWeight(exercise.id, setIndex, -2.5)}
+                                      className="p-1 hover:bg-gray-200 rounded"
+                                    >
+                                      <MinusIcon className="h-3 w-3" />
+                                    </button>
+                                    <span className="mx-2 text-sm font-medium">
+                                      {set.targetWeight} kg
+                                      {set.equipmentSetting && ` (${set.equipmentSetting})`}
+                                    </span>
+                                    <button
+                                      onClick={() => adjustWeight(exercise.id, setIndex, 2.5)}
+                                      className="p-1 hover:bg-gray-200 rounded"
+                                    >
+                                      <PlusIcon className="h-3 w-3" />
+                                    </button>
+                                  </div>
+                                </div>
+                                <button
+                                  onClick={() => handleSetComplete(exercise.id, setIndex)}
+                                  className={`
+                                    px-3 py-1 rounded-lg transition-colors
+                                    ${setsCompleted[setIndex]
+                                      ? 'bg-success text-white'
+                                      : 'bg-white border border-gray-300 hover:bg-gray-100'
+                                    }
+                                  `}
+                                >
+                                  {setsCompleted[setIndex] ? (
+                                    <CheckIcon className="h-5 w-5" />
+                                  ) : (
+                                    'Fertig'
+                                  )}
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -298,40 +441,58 @@ export default function WorkoutDetailPage() {
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">Übungen</span>
+                    <span className="text-gray-600">Gesamtfortschritt</span>
                     <span className="font-medium text-gray-900">
-                      {currentExercise + 1} / {workout.exercises.length}
+                      {Object.values(completedSets).flat().filter(Boolean).length} / 
+                      {workout.exercises.reduce((sum, ex) => sum + ex.sets.length, 0)} Sätze
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div 
                       className="bg-primary-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${((currentExercise + 1) / workout.exercises.length) * 100}%` }}
+                      style={{ 
+                        width: `${(Object.values(completedSets).flat().filter(Boolean).length / 
+                          workout.exercises.reduce((sum, ex) => sum + ex.sets.length, 0)) * 100}%` 
+                      }}
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <h4 className="text-sm font-medium text-gray-900">Übungsübersicht</h4>
-                  {workout.exercises.map((exercise, index) => {
-                    const exerciseKey = `${exercise.id}`;
-                    const setsCompleted = completedSets[exerciseKey] || [];
-                    const completedCount = setsCompleted.filter(Boolean).length;
+                  {Array.from(supersetGroups.entries()).map(([group, exercises]) => {
+                    const isSuperset = !group.startsWith('single_');
                     
                     return (
-                      <div 
-                        key={exercise.id}
-                        className={`
-                          flex items-center justify-between p-2 rounded-lg text-sm
-                          ${currentExercise === index ? 'bg-primary-50' : ''}
-                        `}
-                      >
-                        <span className={currentExercise === index ? 'font-medium' : ''}>
-                          {exercise.name}
-                        </span>
-                        <span className="text-gray-500">
-                          {completedCount}/{exercise.sets}
-                        </span>
+                      <div key={group} className="space-y-1">
+                        {isSuperset && (
+                          <p className="text-xs font-medium text-gray-600 px-2">
+                            Supersatz {group.replace(/[0-9]/g, '')}
+                          </p>
+                        )}
+                        {exercises.map((exercise) => {
+                          const exerciseKey = exercise.id;
+                          const setsCompleted = completedSets[exerciseKey] || [];
+                          const completedCount = setsCompleted.filter(Boolean).length;
+                          
+                          return (
+                            <div 
+                              key={exercise.id}
+                              className={`
+                                flex items-center justify-between p-2 rounded-lg text-sm
+                                ${isSuperset ? 'ml-4' : ''}
+                              `}
+                            >
+                              <span className="text-sm">
+                                {exercise.supersetGroup && `${exercise.supersetGroup}: `}
+                                {exercise.exercise?.name}
+                              </span>
+                              <span className="text-gray-500">
+                                {completedCount}/{exercise.sets.length}
+                              </span>
+                            </div>
+                          );
+                        })}
                       </div>
                     );
                   })}
@@ -339,39 +500,23 @@ export default function WorkoutDetailPage() {
 
                 {isActive && (
                   <div className="pt-4 border-t space-y-3">
-                    <button className="w-full btn-secondary">
-                      <PauseIcon className="mr-2 h-5 w-5" />
-                      Pause
-                    </button>
+                    {isResting && (
+                      <button 
+                        onClick={() => setIsResting(false)}
+                        className="w-full btn-secondary"
+                      >
+                        Pause überspringen
+                      </button>
+                    )}
                     <button 
-                      onClick={() => setCurrentExercise(Math.min(currentExercise + 1, workout.exercises.length - 1))}
-                      className="w-full btn-primary"
-                      disabled={currentExercise >= workout.exercises.length - 1}
+                      onClick={() => setIsActive(false)}
+                      className="w-full btn-danger"
                     >
-                      Nächste Übung
+                      <StopIcon className="mr-2 h-5 w-5" />
+                      Training beenden
                     </button>
                   </div>
                 )}
-              </div>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card-body">
-              <h3 className="text-base font-semibold text-gray-900 mb-3">Letzte Leistung</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Datum</span>
-                  <span className="font-medium text-gray-900">20.01.2024</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Dauer</span>
-                  <span className="font-medium text-gray-900">62 Min</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Gesamtvolumen</span>
-                  <span className="font-medium text-gray-900">8.420 kg</span>
-                </div>
               </div>
             </div>
           </div>
