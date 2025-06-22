@@ -6,15 +6,11 @@ import { useParams } from 'next/navigation';
 import { 
   ArrowLeftIcon,
   PlayIcon,
-  PauseIcon,
   StopIcon,
   PlusIcon,
   MinusIcon,
   CheckIcon,
   ClockIcon,
-  FireIcon,
-  ChartBarIcon,
-  VideoCameraIcon,
   InformationCircleIcon
 } from '@heroicons/react/24/outline';
 import { groupExercisesBySupersets, parseTempoString } from '@/app/utils/training-helpers';
@@ -231,13 +227,13 @@ export default function WorkoutDetailPage() {
   };
 
   const adjustWeight = (exerciseId: string, setIndex: number, delta: number) => {
-    setWorkoutData(prev => ({
+    setWorkoutData((prev: any) => ({
       ...prev,
-      exercises: prev.exercises.map(ex => 
+      exercises: prev.exercises.map((ex: any) => 
         ex.id === exerciseId 
           ? {
               ...ex,
-              sets: ex.sets.map((set, idx) => 
+              sets: ex.sets.map((set: any, idx: number) => 
                 idx === setIndex 
                   ? { ...set, targetWeight: Math.max(0, set.targetWeight + delta) }
                   : set

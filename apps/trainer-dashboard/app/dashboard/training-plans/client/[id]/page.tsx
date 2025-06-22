@@ -326,14 +326,14 @@ export default function ClientTrainingPage() {
                       <div>
                         <h3 className="font-medium text-gray-900">{workout.name}</h3>
                         <p className="text-sm text-gray-500 mt-1">
-                          {workout.description}
+                          {(workout as any).description || `${workout.exercises} Übungen • ${workout.duration}`}
                         </p>
                         <p className="text-sm text-gray-600 mt-2">
-                          {workout.exercises} Übungen • {workout.sets} Sätze • {workout.duration}
+                          {workout.exercises} Übungen • {workout.duration}
                         </p>
-                        {workout.features && (
+                        {(workout as any).features && (
                           <div className="flex flex-wrap gap-1 mt-2">
-                            {workout.features.map((feature, idx) => (
+                            {(workout as any).features.map((feature: string, idx: number) => (
                               <span key={idx} className="text-xs px-2 py-1 bg-primary-100 text-primary-700 rounded">
                                 {feature}
                               </span>

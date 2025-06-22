@@ -15,7 +15,6 @@ export default function TempoTimer({ tempo, isActive, onPhaseChange }: TempoTime
   const [currentRep, setCurrentRep] = useState(0);
   
   const parsed = parseTempoString(tempo);
-  if (!parsed) return null;
   
   const phaseNames = {
     ready: 'Bereit',
@@ -91,6 +90,8 @@ export default function TempoTimer({ tempo, isActive, onPhaseChange }: TempoTime
   };
   
   const hasHold = tempo.includes('H');
+  
+  if (!parsed) return null;
   
   return (
     <div className="mt-3 p-4 bg-gray-50 rounded-lg">

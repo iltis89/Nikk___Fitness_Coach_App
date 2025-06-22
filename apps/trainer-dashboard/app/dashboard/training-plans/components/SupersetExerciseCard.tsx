@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { WorkoutExercise, ExerciseSet } from '@nv/shared/types/training';
-import { formatWeightDisplay, formatRestTime } from '@nv/shared/utils/training';
+import { WorkoutExercise, ExerciseSet } from '@nv/shared';
+import { formatWeightDisplay, formatRestTime } from '@nv/shared';
 import { 
   ClockIcon, 
   PlusIcon, 
