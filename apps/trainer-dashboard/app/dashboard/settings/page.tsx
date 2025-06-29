@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '@/components/ui/Button';
 import { 
   UserIcon,
   BuildingOfficeIcon,
@@ -142,9 +143,9 @@ export default function SettingsPage() {
                     </div>
                   </div>
                   <div className="flex justify-end">
-                    <button type="submit" className="btn-primary">
+                    <Button type="submit" variant="primary">
                       Änderungen speichern
-                    </button>
+                    </Button>
                   </div>
                 </form>
               </div>
@@ -227,9 +228,9 @@ export default function SettingsPage() {
                     </div>
                   </div>
                   <div className="flex justify-end">
-                    <button type="submit" className="btn-primary">
+                    <Button type="submit" variant="primary">
                       Änderungen speichern
-                    </button>
+                    </Button>
                   </div>
                 </form>
               </div>
@@ -287,9 +288,9 @@ export default function SettingsPage() {
                     </div>
                   </div>
                   <div className="flex justify-end">
-                    <button type="submit" className="btn-primary">
+                    <Button type="submit" variant="primary">
                       Einstellungen speichern
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -316,9 +317,9 @@ export default function SettingsPage() {
                         <label className="label">Neues Passwort bestätigen</label>
                         <input type="password" className="input" />
                       </div>
-                      <button type="submit" className="btn-primary">
+                      <Button type="submit" variant="primary">
                         Passwort ändern
-                      </button>
+                      </Button>
                     </form>
                   </div>
                   <div className="border-t pt-6">
@@ -326,9 +327,9 @@ export default function SettingsPage() {
                     <p className="text-sm text-gray-600 mb-4">
                       Erhöhe die Sicherheit deines Kontos mit Zwei-Faktor-Authentifizierung.
                     </p>
-                    <button className="btn-secondary">
+                    <Button variant="secondary">
                       2FA aktivieren
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>

@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   * {
@@ -64,7 +64,7 @@
   }
   
   .btn-danger {
-    @apply btn bg-error text-white hover:bg-red-600 focus:ring-red-500;
+    @apply btn bg-error-500 text-white hover:bg-error-600 focus:ring-error-500;
   }
   
   .input {
@@ -92,15 +92,15 @@
   }
   
   .badge-success {
-    @apply badge bg-green-100 text-green-800;
+    @apply badge bg-success-100 text-success-800;
   }
   
   .badge-warning {
-    @apply badge bg-amber-100 text-amber-800;
+    @apply badge bg-warning-100 text-warning-800;
   }
   
   .badge-error {
-    @apply badge bg-red-100 text-red-800;
+    @apply badge bg-error-100 text-error-800;
   }
   
   .link {
@@ -128,5 +128,42 @@
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+  
+  .animate-shimmer {
+    background-size: 200% 100%;
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 20%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0.3) 80%,
+      transparent 100%
+    );
+    animation: shimmer 1.5s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 0.5s ease-out;
   }
 }

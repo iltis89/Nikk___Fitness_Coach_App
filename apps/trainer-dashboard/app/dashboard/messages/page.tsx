@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '@/components/ui/Button';
 import { 
   MagnifyingGlassIcon,
   PaperAirplaneIcon,
@@ -182,9 +183,9 @@ export default function MessagesPage() {
                   </p>
                 </div>
               </div>
-              <button className="text-sm text-primary-600 hover:text-primary-700">
+              <Button variant="outline" size="sm" className="text-primary-600 border-primary-600 hover:text-primary-700">
                 Profil anzeigen
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -219,12 +220,14 @@ export default function MessagesPage() {
 
           <form onSubmit={handleSendMessage} className="border-t border-gray-200 p-4">
             <div className="flex items-end space-x-2">
-              <button
+              <Button
                 type="button"
-                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                variant="secondary"
+                size="sm"
+                className="p-2 text-gray-400 hover:text-gray-600"
               >
                 <PaperClipIcon className="h-5 w-5" />
-              </button>
+              </Button>
               <div className="flex-1">
                 <textarea
                   rows={1}
@@ -240,13 +243,13 @@ export default function MessagesPage() {
                   }}
                 />
               </div>
-              <button
+              <Button
                 type="submit"
                 disabled={!messageInput.trim()}
-                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                variant="primary"
               >
                 <PaperAirplaneIcon className="h-5 w-5" />
-              </button>
+              </Button>
             </div>
           </form>
         </div>

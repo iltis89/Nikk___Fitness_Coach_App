@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '@/components/ui/Button';
 import { 
   ChevronLeftIcon, 
   ChevronRightIcon,
@@ -144,13 +145,13 @@ export default function CalendarPage() {
               Monat
             </button>
           </div>
-          <button 
+          <Button 
             onClick={() => setShowAppointmentForm(true)}
-            className="btn-primary"
+            variant="primary"
           >
             <PlusIcon className="mr-2 h-5 w-5" />
             Neuer Termin
-          </button>
+          </Button>
         </div>
       </div>
 

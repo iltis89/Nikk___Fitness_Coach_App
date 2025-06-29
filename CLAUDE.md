@@ -1,5 +1,28 @@
 # NV Coaching Platform - KI-Agent Dokumentation
 
+## 🚀 Development Quick Reference
+
+### Power Commands (Empfohlen)
+```
+FEATURE-ADD: [Name]    → Komplettes Feature automatisch
+UI-UPDATE: [Change]    → Intelligente UI-Änderungen  
+CRUD: [Resource]       → Instant Model+API+UI+Tests
+FIX: [Bug]            → Root Cause + Fix + Test
+OPTIMIZE: [Metric]     → Performance-Optimierung
+```
+
+### Sub-Agent Triggers (für Kontrolle)
+```
+PROD:   → Business Value definieren
+ARCH:   → System Design planen
+CODE:   → Implementieren
+TEST:   → Tests schreiben
+REVIEW: → Code prüfen
+```
+
+**Hauptdokumentation**: [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)
+**UI-Spezifisch**: [UI_SWARM_WORKFLOW.md](./UI_SWARM_WORKFLOW.md)
+
 ## Projektübersicht
 Dies ist eine Fitness-Coaching-Plattform für Nikk Viererbl (NV Coaching), bestehend aus einem Trainer-Dashboard und einer Kunden-App.
 
