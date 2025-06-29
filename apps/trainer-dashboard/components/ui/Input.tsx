@@ -21,11 +21,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           id={inputId}
           className={clsx(
-            'input',
+            'input touch-manipulation',
             error && 'border-error-500 focus:border-error-500 focus:ring-error-500',
             className
           )}
           ref={ref}
+          autoComplete={props.autoComplete || 'off'}
           {...props}
         />
         {error && (

@@ -9,12 +9,15 @@ import {
   DocumentTextIcon,
   ArrowRightIcon
 } from '@heroicons/react/24/outline';
+import { ClientAvatar } from '@/components/ui';
+import { PackageType } from '@nv/shared/src/types/package';
 
 const clients = [
   {
     id: 1,
     name: 'Demo Kunde',
     age: 30,
+    packageType: 'personal_training' as PackageType,
     activePlans: 1,
     currentPlan: 'Advanced Training - Nikk Method',
     lastWorkout: '2025-01-20',
@@ -85,9 +88,11 @@ export default function TrainingPlansPage() {
             <div className="card-body">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-base font-semibold text-primary-700">
-                    {client.name.split(' ').map(n => n[0]).join('')}
-                  </div>
+                  <ClientAvatar 
+                    name={client.name} 
+                    packageType={client.packageType}
+                    size="md"
+                  />
                   <div className="ml-3">
                     <h3 className="text-base font-semibold text-gray-900">{client.name}</h3>
                     <p className="text-sm text-gray-500">{client.age} Jahre</p>

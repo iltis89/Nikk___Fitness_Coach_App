@@ -64,15 +64,6 @@ const widgetOptions: WidgetOption[] = [
     defaultSize: { w: 6, h: 4 },
   },
   {
-    id: 'progress',
-    type: 'chart',
-    title: 'Fortschritts-Chart',
-    description: 'Visualisiere Trainingsfortschritte',
-    icon: ChartBarIcon,
-    component: 'ProgressChart',
-    defaultSize: { w: 8, h: 4 },
-  },
-  {
     id: 'quick-actions',
     type: 'quick-actions',
     title: 'Schnellaktionen',

@@ -52,39 +52,37 @@ const actions = [
 
 export default function QuickActions() {
   return (
-    <div className="p-6 h-full flex flex-col">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-bold text-gray-900">Schnellaktionen</h3>
-        <SparklesIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+    <div className="p-4 h-full flex flex-col">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Schnellaktionen</h3>
       </div>
-      <div className="grid grid-cols-2 gap-4 flex-1">
+      <div className="grid grid-cols-2 gap-3 flex-1">
         {actions.map((action, index) => (
           <a
             key={action.name}
             href={action.href}
-            className="group relative flex flex-col items-center justify-center p-6 bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-200 cursor-pointer overflow-hidden"
+            className="group relative flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50/30 hover:shadow-sm transition-all duration-200 cursor-pointer"
             tabIndex={0}
             role="link"
             aria-label={`${action.name} - ${action.description}`}
-            style={{ animationDelay: `${index * 50}ms` }}
           >
-            <div className={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-300 ${action.gradient}`} />
-            
-            <div className={`relative p-4 rounded-2xl ${action.iconBg} group-hover:scale-110 transition-all duration-300 mb-3`}>
-              <action.icon className={`h-8 w-8 ${action.iconColor}`} aria-hidden="true" />
+            <div className={`p-2.5 rounded-lg ${action.iconBg} group-hover:scale-105 transition-transform duration-200`}>
+              <action.icon className={`h-5 w-5 ${action.iconColor}`} aria-hidden="true" />
             </div>
             
-            <div className="text-center relative z-10">
-              <span className="block text-sm font-bold text-gray-900 group-hover:text-gray-800 transition-colors">
+            <div className="flex-1 min-w-0">
+              <span className="block text-sm font-semibold text-gray-900 truncate">
                 {action.name}
               </span>
-              <span className="block text-xs text-gray-500 mt-1 group-hover:text-gray-600 transition-colors">
+              <span className="block text-xs text-gray-500 truncate">
                 {action.description}
               </span>
             </div>
             
-            <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className={`w-2 h-2 rounded-full bg-gradient-to-br ${action.gradient} animate-pulse`} />
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </div>
           </a>
         ))}

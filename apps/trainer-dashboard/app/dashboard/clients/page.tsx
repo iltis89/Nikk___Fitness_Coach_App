@@ -16,43 +16,44 @@ export default function ClientsPage() {
     <div>
       <div>
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Kunden</h1>
-          <p className="mt-2 text-sm text-gray-600">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Kunden</h1>
+          <p className="mt-1 sm:mt-2 text-sm text-gray-600">
             Verwalten Sie Ihre Kunden und deren Trainingspakete
           </p>
         </div>
 
         {/* Controls */}
-        <div className="mb-6 flex flex-col sm:flex-row gap-4">
-          <div className="flex-1">
-            <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Kunden suchen..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-              />
-            </div>
+        <div className="mb-6 space-y-4">
+          {/* Search */}
+          <div className="relative">
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Kunden suchen..."
+              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 touch-manipulation"
+            />
           </div>
           
-          <div className="flex gap-2">
+          {/* Actions */}
+          <div className="flex items-center justify-between gap-3">
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setView('table')}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                className={`px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-colors touch-manipulation ${
                   view === 'table'
                     ? 'bg-white text-gray-900 shadow-sm'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
-                Tabelle
+                <span className="sm:hidden">Liste</span>
+                <span className="hidden sm:inline">Tabelle</span>
               </button>
               <button
                 onClick={() => setView('packages')}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                className={`px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-colors touch-manipulation ${
                   view === 'packages'
                     ? 'bg-white text-gray-900 shadow-sm'
                     : 'text-gray-600 hover:text-gray-900'
@@ -63,12 +64,14 @@ export default function ClientsPage() {
             </div>
             
             <Button
-              onClick={() => router.push('/clients/new')}
+              onClick={() => router.push('/dashboard/clients/new')}
               variant="primary"
-              className="flex items-center gap-2"
+              size="sm"
+              className="flex items-center gap-1.5"
             >
-              <PlusIcon className="h-5 w-5" />
-              Neuer Kunde
+              <PlusIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">Neuer Kunde</span>
+              <span className="sm:hidden">Neu</span>
             </Button>
           </div>
         </div>

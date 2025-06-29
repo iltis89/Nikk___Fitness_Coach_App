@@ -1,52 +1,104 @@
 import React from 'react';
+import { ClientAvatar } from '@/components/ui';
+import { PackageType } from '@nv/shared/src/types/package';
 
 const appointments = [
-  { id: 1, client: 'Max Mustermann', time: '09:00', type: 'Training' },
-  { id: 2, client: 'Anna Schmidt', time: '10:30', type: 'Messung' },
-  { id: 3, client: 'Tom Weber', time: '14:00', type: 'Beratung' },
-  { id: 4, client: 'Lisa Müller', time: '16:00', type: 'Training' },
+  { id: 1, client: 'Max Mustermann', time: '09:00', type: 'Training', packageType: 'personal_training' as PackageType },
+  { id: 2, client: 'Anna Schmidt', time: '10:30', type: 'Messung', packageType: 'personal_training' as PackageType },
+  { id: 3, client: 'Tom Weber', time: '14:00', type: 'Beratung', packageType: 'training_consultation' as PackageType },
+  { id: 4, client: 'Lisa Müller', time: '16:00', type: 'Training', packageType: 'online_coaching' as PackageType },
 ];
 
 export default function AppointmentsList() {
+  // Get current time for highlighting
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+  
+  const isUpcoming = (time: string) => {
+    const [hour, minute] = time.split(':').map(Number);
+    return hour > currentHour || (hour === currentHour && minute > currentMinute);
+  };
+  
+  const isNow = (time: string) => {
+    const [hour] = time.split(':').map(Number);
+    return hour === currentHour;
+  };
+  
   return (
-    <div className="p-6 h-full flex flex-col">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-bold text-gray-900">Heutige Termine</h3>
-        <span className="text-sm text-gray-500">{appointments.length} Termine</span>
+    <div className="p-5 h-full flex flex-col">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-lg font-bold text-gray-900">Heutige Termine</h3>
+          <p className="text-xs text-gray-500 mt-0.5">{new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold text-primary-700">
+            <span className="h-2 w-2 rounded-full bg-primary-500 animate-pulse" />
+            {appointments.length}
+          </span>
+        </div>
       </div>
-      <div className="flex flex-col gap-3 flex-1 overflow-y-auto scrollbar-hide">
-        {appointments.map((appointment, index) => (
-          <div 
-            key={appointment.id} 
-            className="group flex items-center justify-between rounded-xl border border-gray-200 p-4 hover:border-primary-300 hover:bg-primary-50/50 hover:shadow-md transition-all duration-200 cursor-pointer"
-            tabIndex={0}
-            role="button"
-            aria-label={`Termin mit ${appointment.client} um ${appointment.time}`}
-          >
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-sm font-bold text-white shadow-sm group-hover:shadow-md transition-shadow">
-                  {appointment.client.split(' ').map(n => n[0]).join('')}
+      <div className="flex flex-col gap-2 flex-1 overflow-y-auto scrollbar-hide">
+        {appointments.map((appointment, index) => {
+          const upcoming = isUpcoming(appointment.time);
+          const current = isNow(appointment.time);
+          
+          return (
+            <div 
+              key={appointment.id} 
+              className={`group relative flex items-center justify-between rounded-lg border p-3 transition-all duration-200 cursor-pointer
+                ${current 
+                  ? 'border-primary-400 bg-primary-50 shadow-sm' 
+                  : upcoming
+                  ? 'border-gray-200 hover:border-primary-300 hover:bg-gray-50'
+                  : 'border-gray-100 bg-gray-50 opacity-60'
+                }
+              `}
+              tabIndex={0}
+              role="button"
+              aria-label={`Termin mit ${appointment.client} um ${appointment.time}`}
+            >
+              {current && (
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary-500 rounded-l-lg" />
+              )}
+              <div className="flex items-center gap-3 pl-2">
+                <div className="text-center min-w-[48px]">
+                  <span className="text-xl font-bold text-gray-900 tabular-nums block leading-tight">
+                    {appointment.time.split(':')[0]}
+                  </span>
+                  <span className="text-xs text-gray-500 block">
+                    :{appointment.time.split(':')[1]}
+                  </span>
                 </div>
-                {index === 0 && (
-                  <div className="absolute -top-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-white animate-pulse" />
+                <div className="h-12 w-px bg-gray-200" />
+                <div className="relative">
+                  <ClientAvatar 
+                    name={appointment.client} 
+                    packageType={appointment.packageType}
+                    size="sm"
+                    className="shadow-sm"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm font-semibold transition-colors ${
+                    current ? 'text-primary-700' : 'text-gray-900 group-hover:text-primary-700'
+                  }`}>
+                    {appointment.client}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">{appointment.type}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {current && (
+                  <span className="text-xs font-medium text-primary-600 bg-primary-100 px-2 py-1 rounded-full">
+                    Jetzt
+                  </span>
                 )}
               </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900 group-hover:text-primary-700 transition-colors">
-                  {appointment.client}
-                </p>
-                <p className="text-xs font-medium text-gray-500 mt-0.5">{appointment.type}</p>
-              </div>
             </div>
-            <div className="text-right">
-              <span className="text-lg font-bold text-gray-900 tabular-nums">
-                {appointment.time}
-              </span>
-              <p className="text-xs text-gray-500 mt-0.5">Uhr</p>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

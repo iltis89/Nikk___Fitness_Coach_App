@@ -11,6 +11,8 @@ import {
   HeartIcon,
   BoltIcon,
 } from '@heroicons/react/24/outline';
+import { ClientAvatar } from '@/components/ui';
+import { PackageType } from '@nv/shared/src/types/package';
 
 interface CustomerMetric {
   label: string;
@@ -26,6 +28,7 @@ interface Customer {
   id: string;
   name: string;
   avatar?: string;
+  packageType?: PackageType | null;
   metrics: CustomerMetric[];
   goals: {
     title: string;
@@ -42,6 +45,7 @@ const mockCustomers: Customer[] = [
   {
     id: '1',
     name: 'Max Mustermann',
+    packageType: 'personal_training' as PackageType,
     metrics: [
       { label: 'Körperfett', value: 18.5, change: -2.3, unit: '%', icon: ScaleIcon, color: 'text-green-600', trend: 'down' },
       { label: 'Muskelmasse', value: 42.3, change: 1.2, unit: 'kg', icon: ChartBarIcon, color: 'text-blue-600', trend: 'up' },
@@ -60,6 +64,7 @@ const mockCustomers: Customer[] = [
   {
     id: '2',
     name: 'Anna Schmidt',
+    packageType: 'online_coaching' as PackageType,
     metrics: [
       { label: 'Körperfett', value: 24.8, change: -1.5, unit: '%', icon: ScaleIcon, color: 'text-green-600', trend: 'down' },
       { label: 'Gewicht', value: 65.2, change: -2.1, unit: 'kg', icon: ChartBarIcon, color: 'text-blue-600', trend: 'down' },
@@ -147,9 +152,11 @@ export default function CustomerStats() {
       {/* Customer Info */}
       <div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl mb-4">
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-bold">
-            {selectedCustomer.name.split(' ').map(n => n[0]).join('')}
-          </div>
+          <ClientAvatar 
+            name={selectedCustomer.name} 
+            packageType={selectedCustomer.packageType}
+            size="md"
+          />
           <div>
             <div className="flex items-center gap-2">
               {selectedCustomer.tags.map(tag => (

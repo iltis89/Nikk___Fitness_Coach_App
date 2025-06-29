@@ -1,0 +1,184 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  TRAINER
+  ADMIN
+  CLIENT
+}
+
+model User {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  password       String
+  role           Role      @default(TRAINER)
+  firstName      String
+  lastName       String
+  phoneNumber    String?
+  profilePicture String?
+  isActive       Boolean   @default(true)
+  
+  // Relations
+  clients        Client[]
+  refreshTokens  RefreshToken[]
+  
+  // Timestamps
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  lastLoginAt    DateTime?
+  
+  @@index([email])
+}
+
+model RefreshToken {
+  id          String   @id @default(cuid())
+  token       String   @unique
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  
+  @@index([token])
+  @@index([userId])
+}
+
+model Client {
+  id                String    @id @default(cuid())
+  trainerId         String
+  trainer           User      @relation(fields: [trainerId], references: [id])
+  
+  // Personal Info
+  firstName         String
+  lastName          String
+  email             String?
+  phoneNumber       String?
+  birthDate         DateTime?
+  gender            String?
+  
+  // Fitness Data
+  height            Float?    // in cm
+  currentWeight     Float?    // in kg
+  goalWeight        Float?    // in kg
+  activityLevel     String?   // sedentary, moderate, active, very_active
+  fitnessGoals      String[]  // array of goals
+  medicalConditions String[]  // array of conditions
+  
+  // Status
+  isActive          Boolean   @default(true)
+  notes             String?
+  
+  // Relations
+  measurements      Measurement[]
+  trainingPlans     TrainingPlan[]
+  nutritionPlans    NutritionPlan[]
+  
+  // Timestamps
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  lastMeasurement   DateTime?
+  
+  @@index([trainerId])
+  @@index([email])
+}
+
+model Measurement {
+  id              String   @id @default(cuid())
+  clientId        String
+  client          Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  // Basic Measurements
+  weight          Float?   // kg
+  bodyFat         Float?   // percentage
+  muscleMass      Float?   // kg
+  waterPercentage Float?   // percentage
+  
+  // Circumferences (in cm)
+  neck            Float?
+  shoulders       Float?
+  chest           Float?
+  leftArm         Float?
+  rightArm        Float?
+  waist           Float?
+  hips            Float?
+  leftThigh       Float?
+  rightThigh      Float?
+  leftCalf        Float?
+  rightCalf       Float?
+  
+  // Skinfold Measurements (in mm)
+  skinfolds       Json?    // JSON object with all skinfold measurements
+  
+  // Calculated Values
+  bmi             Float?
+  bmr             Float?   // Basal Metabolic Rate
+  tdee            Float?   // Total Daily Energy Expenditure
+  
+  // Metadata
+  notes           String?
+  measuredBy      String?  // Who took the measurement
+  measuredAt      DateTime @default(now())
+  createdAt       DateTime @default(now())
+  
+  @@index([clientId])
+  @@index([measuredAt])
+}
+
+model TrainingPlan {
+  id          String   @id @default(cuid())
+  clientId    String
+  client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  name        String
+  description String?
+  goal        String?
+  duration    Int?     // weeks
+  frequency   Int?     // sessions per week
+  
+  workouts    Json     // Array of workout objects
+  
+  isActive    Boolean  @default(true)
+  startDate   DateTime
+  endDate     DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([clientId])
+  @@index([isActive])
+}
+
+model NutritionPlan {
+  id          String   @id @default(cuid())
+  clientId    String
+  client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  name        String
+  description String?
+  goal        String?
+  
+  // Macros
+  calories    Int
+  protein     Float    // grams
+  carbs       Float    // grams
+  fat         Float    // grams
+  fiber       Float?   // grams
+  
+  // Meal Plan
+  meals       Json     // Array of meal objects
+  
+  isActive    Boolean  @default(true)
+  startDate   DateTime
+  endDate     DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([clientId])
+  @@index([isActive])
+}

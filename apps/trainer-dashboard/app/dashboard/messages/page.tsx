@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
+import { ClientAvatar } from '@/components/ui';
 import { 
   MagnifyingGlassIcon,
   PaperAirplaneIcon,
@@ -9,6 +10,7 @@ import {
   CheckIcon,
   CheckCircleIcon
 } from '@heroicons/react/24/outline';
+import { PackageType } from '@nv/shared/src/types/package';
 
 const conversations = [
   {
@@ -18,6 +20,7 @@ const conversations = [
     timestamp: 'vor 2 Stunden',
     unread: 2,
     online: true,
+    packageType: 'personal_training' as PackageType,
   },
   {
     id: 2,
@@ -26,6 +29,7 @@ const conversations = [
     timestamp: 'vor 4 Stunden',
     unread: 1,
     online: false,
+    packageType: 'personal_training' as PackageType,
   },
   {
     id: 3,
@@ -34,6 +38,7 @@ const conversations = [
     timestamp: 'gestern',
     unread: 0,
     online: false,
+    packageType: 'training_consultation' as PackageType,
   },
   {
     id: 4,
@@ -42,6 +47,7 @@ const conversations = [
     timestamp: 'gestern',
     unread: 0,
     online: true,
+    packageType: 'online_coaching' as PackageType,
   },
 ];
 
@@ -134,9 +140,11 @@ export default function MessagesPage() {
                     <div className="flex items-start justify-between">
                       <div className="flex items-center">
                         <div className="relative">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 text-sm font-medium text-primary-700">
-                            {conversation.client.split(' ').map(n => n[0]).join('')}
-                          </div>
+                          <ClientAvatar 
+                            name={conversation.client} 
+                            packageType={conversation.packageType}
+                            size="sm"
+                          />
                           {conversation.online && (
                             <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-400 border-2 border-white"></div>
                           )}
@@ -169,9 +177,11 @@ export default function MessagesPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="relative">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 text-sm font-medium text-primary-700">
-                    {selectedConversation.client.split(' ').map(n => n[0]).join('')}
-                  </div>
+                  <ClientAvatar 
+                    name={selectedConversation.client} 
+                    packageType={selectedConversation.packageType}
+                    size="sm"
+                  />
                   {selectedConversation.online && (
                     <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-400 border-2 border-white"></div>
                   )}

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Logo } from '@/components/ui/Logo';
 import { Button } from '@/components/ui/Button';
 import {
@@ -27,6 +27,16 @@ const navigation = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Clear any auth tokens from localStorage
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userSession');
+    
+    // Redirect to login page
+    router.push('/auth/login');
+  };
 
   return (
     <div className="flex h-full flex-col bg-white border-r border-gray-200">
@@ -37,7 +47,7 @@ export default function Sidebar() {
       <nav className="flex-1 px-3 py-4">
         <div className="flex flex-col gap-1">
           {navigation.map((item) => {
-            const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
+            const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname?.startsWith(`${item.href}/`));
             return (
               <Link
                 key={item.name}
@@ -68,7 +78,11 @@ export default function Sidebar() {
       </nav>
       
       <div className="border-t border-gray-200 p-3">
-        <Button variant="secondary" className="w-full justify-start gap-3">
+        <Button 
+          variant="secondary" 
+          className="w-full justify-start gap-3"
+          onClick={handleLogout}
+        >
           <ArrowRightOnRectangleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
           Abmelden
         </Button>

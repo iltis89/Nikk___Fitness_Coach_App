@@ -2,11 +2,14 @@
 
 import { useState } from 'react';
 import { ChartBarIcon, PlusIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import { ClientAvatar } from '@/components/ui';
+import { PackageType } from '@nv/shared/src/types/package';
 
 const measurements = [
   {
     id: 1,
     client: 'Max Mustermann',
+    packageType: 'personal_training' as PackageType,
     date: '2024-01-16',
     weight: 85.5,
     bodyFat: 18.2,
@@ -31,6 +34,7 @@ const measurements = [
   {
     id: 2,
     client: 'Anna Schmidt',
+    packageType: 'online_coaching' as PackageType,
     date: '2024-01-15',
     weight: 65.2,
     bodyFat: 24.5,
@@ -205,9 +209,11 @@ export default function MeasurementsPage() {
                     <tr key={measurement.id} className="hover:bg-gray-50 transition-colors">
                       <td className="py-4">
                         <div className="flex items-center">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 text-sm font-medium text-primary-700">
-                            {measurement.client.split(' ').map(n => n[0]).join('')}
-                          </div>
+                          <ClientAvatar 
+                            name={measurement.client} 
+                            packageType={measurement.packageType}
+                            size="sm"
+                          />
                           <span className="ml-3 text-sm font-medium text-gray-900">{measurement.client}</span>
                         </div>
                       </td>
@@ -239,9 +245,12 @@ export default function MeasurementsPage() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-success/10 text-sm font-medium text-success">
-                    MM
-                  </div>
+                  <ClientAvatar 
+                    name="Max Mustermann" 
+                    packageType="personal_training"
+                    size="sm"
+                    className="opacity-20"
+                  />
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-900">Max Mustermann</p>
                     <p className="text-xs text-gray-500">-2.3% Körperfett</p>
@@ -251,9 +260,12 @@ export default function MeasurementsPage() {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-success/10 text-sm font-medium text-success">
-                    LM
-                  </div>
+                  <ClientAvatar 
+                    name="Lisa Müller" 
+                    packageType="online_coaching"
+                    size="sm"
+                    className="opacity-20"
+                  />
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-900">Lisa Müller</p>
                     <p className="text-xs text-gray-500">+1.2kg Muskelmasse</p>

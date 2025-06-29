@@ -9,6 +9,7 @@ UI-UPDATE: [Change]    → Intelligente UI-Änderungen
 CRUD: [Resource]       → Instant Model+API+UI+Tests
 FIX: [Bug]            → Root Cause + Fix + Test
 OPTIMIZE: [Metric]     → Performance-Optimierung
+FEEDBACK-REVIEW        → Screenshot-basiertes Feedback abarbeiten
 ```
 
 ### Sub-Agent Triggers (für Kontrolle)
@@ -19,6 +20,12 @@ CODE:   → Implementieren
 TEST:   → Tests schreiben
 REVIEW: → Code prüfen
 ```
+
+### 📸 Visuelles Feedback Workflow
+1. Screenshots mit Annotationen in `/feedback-screenshots/` ablegen
+2. Dateien nummerieren: `01_name.png`, `02_name.png`, etc.
+3. Command: `FEEDBACK-REVIEW` triggern
+4. Claude analysiert und setzt automatisch um
 
 **Hauptdokumentation**: [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)
 **UI-Spezifisch**: [UI_SWARM_WORKFLOW.md](./UI_SWARM_WORKFLOW.md)
@@ -47,6 +54,7 @@ nv-coaching-platform/
 │   ├── database/            # Prisma Schema & Migrations
 │   └── ai-services/         # KI-Features & Digital Twin
 ├── docs/                    # Projektdokumentation
+├── feedback-screenshots/    # Visuelles Feedback
 └── infrastructure/          # Docker & Deployment Configs
 ```
 

@@ -5,6 +5,8 @@ import {
   FireIcon,
   ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
+import { ClientAvatar } from '@/components/ui';
+import { PackageType } from '@nv/shared/src/types/package';
 
 const clients = [
   { 
@@ -15,6 +17,7 @@ const clients = [
     nextAppointment: 'Morgen, 09:00',
     status: 'active',
     streak: 12,
+    packageType: 'personal_training' as PackageType,
   },
   { 
     id: 2, 
@@ -24,6 +27,7 @@ const clients = [
     nextAppointment: 'Mi, 14:00',
     status: 'active',
     streak: 8,
+    packageType: 'personal_training' as PackageType,
   },
   { 
     id: 3, 
@@ -33,6 +37,7 @@ const clients = [
     nextAppointment: 'Fr, 10:30',
     status: 'warning',
     streak: 3,
+    packageType: 'training_consultation' as PackageType,
   },
   { 
     id: 4, 
@@ -42,6 +47,7 @@ const clients = [
     nextAppointment: 'Do, 16:00',
     status: 'warning',
     streak: 1,
+    packageType: 'online_coaching' as PackageType,
   },
   { 
     id: 5, 
@@ -51,6 +57,7 @@ const clients = [
     nextAppointment: '-',
     status: 'inactive',
     streak: 0,
+    packageType: null,
   },
 ];
 
@@ -93,9 +100,12 @@ export default function ClientsList() {
             style={{ animationDelay: `${index * 50}ms` }}
           >
             <div className="relative">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-sm font-bold text-white shadow-sm group-hover:shadow-md transition-shadow">
-                {client.initials}
-              </div>
+              <ClientAvatar 
+                name={client.name} 
+                packageType={client.packageType}
+                size="md"
+                className="shadow-sm group-hover:shadow-md transition-shadow"
+              />
               <div className={`absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-white ${getStatusColor(client.status)}`} />
             </div>
             

@@ -17,12 +17,19 @@ export default function DashboardWidget({
   children,
 }: DashboardWidgetProps) {
   return (
-    <div className="h-full bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+    <div className={`h-full bg-white rounded-lg border shadow-sm overflow-hidden transition-all duration-200 ${
+      isEditMode 
+        ? 'border-primary-300 shadow-primary-100' 
+        : 'border-gray-100 hover:shadow-md hover:border-gray-200'
+    }`}>
       {isEditMode && (
-        <div className="relative bg-gradient-to-b from-gray-50 to-gray-100 px-4 py-3 border-b border-gray-200">
+        <div className="absolute inset-x-0 top-0 bg-primary-600 px-3 py-1.5 z-10">
           <div className="flex items-center justify-between">
             <div className="widget-handle cursor-move flex-1 select-none">
-              <span className="text-sm font-semibold text-gray-700">
+              <span className="text-xs font-medium text-white flex items-center gap-1.5">
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
+                </svg>
                 {title}
               </span>
             </div>
@@ -31,20 +38,19 @@ export default function DashboardWidget({
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                console.log(`Remove button clicked for widget ${id}`);
                 onRemove();
               }}
               onMouseDown={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all duration-200 z-50"
+              className="p-1 rounded text-white/80 hover:text-white hover:bg-white/20 transition-all duration-200"
               aria-label={`${title} entfernen`}
             >
-              <XMarkIcon className="h-4 w-4" />
+              <XMarkIcon className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
       )}
-      <div className={`h-full overflow-auto ${isEditMode ? 'pt-12' : ''}`}>
+      <div className={`h-full overflow-hidden ${isEditMode ? 'mt-7' : ''}`}>
         {children}
       </div>
     </div>

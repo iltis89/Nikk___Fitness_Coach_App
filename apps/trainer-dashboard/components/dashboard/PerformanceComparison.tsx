@@ -6,11 +6,14 @@ import {
   ArrowDownIcon,
   SparklesIcon,
 } from '@heroicons/react/24/outline';
+import { ClientAvatar } from '@/components/ui';
+import { PackageType } from '@nv/shared/src/types/package';
 
 interface ComparisonData {
   id: string;
   name: string;
   avatar?: string;
+  packageType?: PackageType | null;
   metrics: {
     strength: number;
     endurance: number;
@@ -26,6 +29,7 @@ const mockData: ComparisonData[] = [
   {
     id: '1',
     name: 'Max Mustermann',
+    packageType: 'personal_training' as PackageType,
     metrics: {
       strength: 92,
       endurance: 78,
@@ -39,6 +43,7 @@ const mockData: ComparisonData[] = [
   {
     id: '2',
     name: 'Anna Schmidt',
+    packageType: 'personal_training' as PackageType,
     metrics: {
       strength: 68,
       endurance: 88,
@@ -52,6 +57,7 @@ const mockData: ComparisonData[] = [
   {
     id: '3',
     name: 'Tom Weber',
+    packageType: 'training_consultation' as PackageType,
     metrics: {
       strength: 85,
       endurance: 72,
@@ -65,6 +71,7 @@ const mockData: ComparisonData[] = [
   {
     id: '4',
     name: 'Lisa Müller',
+    packageType: 'online_coaching' as PackageType,
     metrics: {
       strength: 72,
       endurance: 80,
@@ -155,9 +162,11 @@ export default function PerformanceComparison() {
             <div className="flex items-center gap-3 mb-1">
               <div className="flex items-center gap-2 flex-1">
                 <div className="relative">
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-xs font-bold text-white">
-                    {person.name.split(' ').map(n => n[0]).join('')}
-                  </div>
+                  <ClientAvatar 
+                    name={person.name} 
+                    packageType={person.packageType}
+                    size="sm"
+                  />
                   {index === 0 && (
                     <div className="absolute -top-1 -right-1">
                       <SparklesIcon className="h-4 w-4 text-yellow-500" />

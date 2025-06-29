@@ -11,6 +11,8 @@ import {
   CameraIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { ClientAvatar } from '@/components/ui';
+import { PackageType } from '@nv/shared/src/types/package';
 
 const client = {
   id: 1,
@@ -21,12 +23,18 @@ const client = {
   joinDate: '2023-06-01',
   status: 'active',
   avatar: null,
+  packageType: 'personal_training' as PackageType,
   address: 'Musterstraße 123, 80331 München',
   emergencyContact: 'Maria Mustermann - +49 123 456788',
   medicalConditions: ['Leichte Rückenschmerzen', 'Allergien (Pollen)'],
   goals: ['Muskelaufbau', 'Kraftsteigerung', 'Verbesserung der Körperhaltung'],
   notes: 'Sehr motiviert, kommt immer pünktlich. Achtet auf gute Form bei den Übungen.',
   currentPlan: 'Muskelaufbau Anfänger',
+  supplements: [
+    { name: 'Whey Protein', startDate: '2023-08-15' },
+    { name: 'Kreatin', startDate: '2023-09-01' },
+    { name: 'Omega-3', startDate: '2023-06-01' }
+  ],
   measurements: {
     latest: {
       date: '2024-01-16',
@@ -76,10 +84,13 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
             <p className="text-sm text-gray-500">Kunde seit {new Date(client.joinDate).toLocaleDateString('de-DE')}</p>
           </div>
         </div>
-        <button className="btn-primary">
+        <Link 
+          href={`/dashboard/clients/${params.id}/edit`}
+          className="btn-primary inline-flex items-center"
+        >
           <PencilIcon className="mr-2 h-5 w-5" />
           Bearbeiten
-        </button>
+        </Link>
       </div>
 
       <div className="card">
@@ -87,9 +98,11 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
           <div className="flex flex-col md:flex-row md:items-start md:space-x-6">
             <div className="flex-shrink-0">
               <div className="relative">
-                <div className="h-32 w-32 rounded-full bg-primary-100 flex items-center justify-center text-3xl font-semibold text-primary-700">
-                  {client.name.split(' ').map(n => n[0]).join('')}
-                </div>
+                <ClientAvatar 
+                  name={client.name} 
+                  packageType={client.packageType}
+                  size="xl"
+                />
                 <button className="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors">
                   <CameraIcon className="h-5 w-5 text-gray-600" />
                 </button>
@@ -158,6 +171,22 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
                   <div className="mt-2 flex flex-wrap gap-2">
                     {client.medicalConditions.map((condition, index) => (
                       <span key={index} className="badge badge-warning">{condition}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {client.supplements && client.supplements.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium text-gray-500">Supplements</h3>
+                  <div className="mt-2 space-y-2">
+                    {client.supplements.map((supplement, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                        <span className="text-sm font-medium text-gray-900">{supplement.name}</span>
+                        <span className="text-xs text-gray-500">
+                          Seit {new Date(supplement.startDate).toLocaleDateString('de-DE')}
+                        </span>
+                      </div>
                     ))}
                   </div>
                 </div>

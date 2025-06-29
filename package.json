@@ -14,7 +14,11 @@
     "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "feedback:watch": "node scripts/feedback-automation.js",
+    "feedback:watch:bg": "node scripts/feedback-automation.js &",
+    "feedback:auto": "./scripts/feedback-full-auto.sh",
+    "feedback:server": "node scripts/feedback-api-server.js"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.34.1",
@@ -31,5 +35,8 @@
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
   },
-  "packageManager": "npm@9.8.1"
+  "packageManager": "npm@9.8.1",
+  "dependencies": {
+    "@headlessui/react": "^2.2.4"
+  }
 }

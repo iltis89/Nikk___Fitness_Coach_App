@@ -1,7 +1,9 @@
 export { Badge } from './Badge';
 export { Button } from './Button';
 export { Card } from './Card';
+export { ClientAvatar } from './ClientAvatar';
 export { ConfirmDialog } from './ConfirmDialog';
+export { EasterEgg } from './EasterEgg';
 export { Input } from './Input';
 export { LoadingSpinner } from './LoadingSpinner';
 export { Logo } from './Logo';

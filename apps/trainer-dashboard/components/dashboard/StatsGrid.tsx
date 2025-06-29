@@ -3,7 +3,6 @@ import {
   UsersIcon, 
   ChartBarIcon, 
   CalendarDaysIcon,
-  CurrencyEuroIcon,
   ArrowUpIcon,
   ArrowDownIcon
 } from '@heroicons/react/24/outline';
@@ -30,43 +29,40 @@ const stats = [
     changeType: 'increase',
     icon: ChartBarIcon,
   },
-  {
-    name: 'Umsatz diesen Monat',
-    value: '€4,320',
-    change: '+12%',
-    changeType: 'increase',
-    icon: CurrencyEuroIcon,
-  },
 ];
 
 export default function StatsGrid() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-6">
-      {stats.map((stat) => (
-        <div key={stat.name} className="group relative bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 p-5 hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{stat.name}</p>
-              <p className="mt-2 text-3xl font-bold text-gray-900 tabular-nums">{stat.value}</p>
+    <div className="flex flex-col gap-3 p-4 h-full">
+      {stats.map((stat, index) => (
+        <div 
+          key={stat.name} 
+          className="group relative bg-white rounded-lg border border-gray-100 p-3 hover:border-primary-200 hover:shadow-sm transition-all duration-200"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="rounded-lg bg-gray-50 p-2 group-hover:bg-primary-50 transition-colors duration-200">
+                <stat.icon className="h-4 w-4 text-gray-600 group-hover:text-primary-600" aria-hidden="true" />
+              </div>
+              <div>
+                <p className="text-xs font-medium text-gray-500">{stat.name}</p>
+                <div className="flex items-baseline gap-2 mt-0.5">
+                  <p className="text-xl font-bold text-gray-900 tabular-nums">{stat.value}</p>
+                  <div className={`flex items-center gap-0.5 text-xs font-medium ${
+                    stat.changeType === 'increase' 
+                      ? 'text-success-600' 
+                      : 'text-error-600'
+                  }`}>
+                    {stat.changeType === 'increase' ? (
+                      <ArrowUpIcon className="h-3 w-3" />
+                    ) : (
+                      <ArrowDownIcon className="h-3 w-3" />
+                    )}
+                    <span>{stat.change}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="rounded-xl bg-gradient-to-br from-primary-100 to-primary-200 p-3 group-hover:scale-110 transition-transform duration-200">
-              <stat.icon className="h-5 w-5 text-primary-700" aria-hidden="true" />
-            </div>
-          </div>
-          <div className="mt-4 flex items-center gap-2 text-sm">
-            <div className={`flex items-center gap-1 px-2 py-1 rounded-md ${
-              stat.changeType === 'increase' 
-                ? 'bg-success-50 text-success-700' 
-                : 'bg-error-50 text-error-700'
-            }`}>
-              {stat.changeType === 'increase' ? (
-                <ArrowUpIcon className="h-3 w-3" aria-label="Gestiegen" />
-              ) : (
-                <ArrowDownIcon className="h-3 w-3" aria-label="Gefallen" />
-              )}
-              <span className="font-semibold">{stat.change}</span>
-            </div>
-            <span className="text-xs text-gray-500">vs. letzten Monat</span>
           </div>
         </div>
       ))}

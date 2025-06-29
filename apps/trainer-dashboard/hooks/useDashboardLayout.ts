@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 export interface DashboardWidget {
   id: string;
-  type: 'stats' | 'chart' | 'list' | 'calendar' | 'quick-actions' | 'insights';
+  type: 'stats' | 'chart' | 'list' | 'calendar' | 'quick-actions' | 'insights' | 'revenue';
   title: string;
   x: number;
   y: number;
@@ -33,65 +33,57 @@ interface DashboardLayoutState {
 }
 
 const defaultWidgets: DashboardWidget[] = [
-  {
-    id: 'stats-1',
-    type: 'stats',
-    title: 'Kunden Statistiken',
-    x: 0,
-    y: 0,
-    w: 12,
-    h: 2,
-    component: 'StatsGrid',
-    minW: 6,
-    minH: 2,
-  },
+  // Primary focus area - Today's appointments (left column)
   {
     id: 'appointments-1',
     type: 'list',
     title: 'Heutige Termine',
     x: 0,
-    y: 2,
-    w: 6,
-    h: 4,
+    y: 0,
+    w: 5,
+    h: 5,
     component: 'AppointmentsList',
     minW: 4,
-    minH: 3,
+    minH: 4,
   },
-  {
-    id: 'activities-1',
-    type: 'list',
-    title: 'Letzte Aktivitäten',
-    x: 6,
-    y: 2,
-    w: 6,
-    h: 4,
-    component: 'RecentActivities',
-    minW: 4,
-    minH: 3,
-  },
-  {
-    id: 'chart-1',
-    type: 'chart',
-    title: 'Fortschritte diese Woche',
-    x: 0,
-    y: 6,
-    w: 8,
-    h: 4,
-    component: 'ProgressChart',
-    minW: 4,
-    minH: 3,
-  },
+  // Quick actions - positioned for easy access (center-top)
   {
     id: 'quick-actions-1',
     type: 'quick-actions',
     title: 'Schnellaktionen',
-    x: 8,
-    y: 6,
+    x: 5,
+    y: 0,
     w: 4,
-    h: 4,
+    h: 3,
     component: 'QuickActions',
     minW: 3,
+    minH: 2,
+  },
+  // Compact stats - key metrics at a glance (right-top)
+  {
+    id: 'stats-1',
+    type: 'stats',
+    title: 'Kunden Statistiken',
+    x: 9,
+    y: 0,
+    w: 3,
+    h: 3,
+    component: 'StatsGrid',
+    minW: 3,
     minH: 3,
+  },
+  // Revenue tracking - business critical (center-bottom)
+  {
+    id: 'revenue-1',
+    type: 'revenue',
+    title: 'Umsatz',
+    x: 5,
+    y: 3,
+    w: 7,
+    h: 2,
+    component: 'RevenueWidget',
+    minW: 4,
+    minH: 2,
   },
 ];
 
@@ -101,7 +93,7 @@ export const useDashboardLayout = create<DashboardLayoutState>()(
       widgets: defaultWidgets,
       isEditMode: false,
       gridCols: 12,
-      rowHeight: 60,
+      rowHeight: 80,
       
       setWidgets: (widgets) => set({ widgets }),
       

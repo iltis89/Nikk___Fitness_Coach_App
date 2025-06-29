@@ -17,6 +17,7 @@ import AiInsights from './AiInsights';
 import CustomerStats from './CustomerStats';
 import PerformanceComparison from './PerformanceComparison';
 import PackageWidget from './PackageWidget';
+import { RevenueWidget } from './RevenueWidget';
 import WidgetSelector from './WidgetSelector';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -34,6 +35,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   CustomerStats,
   PerformanceComparison,
   PackageWidget,
+  RevenueWidget,
 };
 
 export default function DashboardGrid() {
@@ -89,43 +91,47 @@ export default function DashboardGrid() {
   return (
     <div className="relative">
       {/* Control Bar */}
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
-        <div className="flex items-center gap-2">
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Dashboard</h1>
+        <div className="flex items-center gap-2 self-end sm:self-auto">
           {isEditMode && (
             <>
               <Button
                 onClick={() => setShowWidgetSelector(true)}
                 variant="secondary"
+                size="sm"
                 className="flex items-center gap-1"
               >
                 <PlusIcon className="h-4 w-4" />
-                Widget hinzufügen
+                <span className="hidden sm:inline">Widget hinzufügen</span>
+                <span className="sm:hidden">+</span>
               </Button>
               <Button
                 onClick={resetLayout}
                 variant="secondary"
+                size="sm"
                 className="flex items-center gap-1"
               >
                 <ArrowPathIcon className="h-4 w-4" />
-                Zurücksetzen
+                <span className="hidden sm:inline">Zurücksetzen</span>
               </Button>
             </>
           )}
           <Button
             onClick={toggleEditMode}
             variant={isEditMode ? 'primary' : 'secondary'}
+            size="sm"
             className="flex items-center gap-1"
           >
             <PencilIcon className="h-4 w-4" />
-            {isEditMode ? 'Fertig' : 'Bearbeiten'}
+            <span className="hidden sm:inline">{isEditMode ? 'Fertig' : 'Bearbeiten'}</span>
           </Button>
         </div>
       </div>
 
       {/* Grid Layout */}
       <ResponsiveGridLayout
-        className="layout"
+        className="layout dashboard-grid"
         layouts={layouts}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
