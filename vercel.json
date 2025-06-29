@@ -2,6 +2,5 @@
   "buildCommand": "npm install && npm run build",
   "outputDirectory": "apps/trainer-dashboard/.next",
   "installCommand": "npm install",
-  "framework": null,
-  "rootDirectory": "."
+  "framework": null
 }
