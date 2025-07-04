@@ -1,6 +1,5 @@
 {
-  "buildCommand": "npm install && cd apps/trainer-dashboard && npm run build",
+  "buildCommand": "turbo run build --filter=trainer-dashboard",
   "outputDirectory": "apps/trainer-dashboard/.next",
-  "installCommand": "npm install",
-  "framework": null
+  "framework": "nextjs"
 }

@@ -1,14 +1,28 @@
 'use client';
 
 import { useState } from 'react';
-import { ChartBarIcon, PlusIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import { 
+  ChartBarIcon, 
+  CalendarIcon, 
+  FunnelIcon,
+  ArrowDownTrayIcon,
+  MagnifyingGlassIcon
+} from '@heroicons/react/24/outline';
 import { ClientAvatar } from '@/components/ui';
 import { PackageType } from '@nv/shared/src/types/package';
+import { MeasurementDetailModal } from '@/components/measurements/MeasurementDetailModal';
+import { ClientMeasurementHistoryModal } from '@/components/measurements/ClientMeasurementHistoryModal';
+import { QuickMeasurementCard } from '@/components/measurements/QuickMeasurementCard';
+import { MeasurementStats } from '@/components/measurements/MeasurementStats';
+import { MeasurementWizard } from '@/components/measurements/MeasurementWizard';
+import { formatDate } from '@/utils/dateFormatters';
 
+// Mock data - TODO: Replace with API calls
 const measurements = [
   {
     id: 1,
     client: 'Max Mustermann',
+    clientId: '1',
     packageType: 'personal_training' as PackageType,
     date: '2024-01-16',
     weight: 85.5,
@@ -34,6 +48,7 @@ const measurements = [
   {
     id: 2,
     client: 'Anna Schmidt',
+    clientId: '2',
     packageType: 'online_coaching' as PackageType,
     date: '2024-01-15',
     weight: 65.2,
@@ -58,257 +73,317 @@ const measurements = [
   },
 ];
 
-const ypsiSites = [
-  { key: 'chest', name: 'Brust', description: 'Diagonale Falte zwischen Brustwarze und vorderer Achselhöhle' },
-  { key: 'triceps', name: 'Trizeps', description: 'Vertikale Falte auf der Rückseite des Oberarms' },
-  { key: 'subscapular', name: 'Subscapular', description: 'Diagonale Falte unter dem Schulterblatt' },
-  { key: 'midaxillary', name: 'Mittlere Achselhöhle', description: 'Vertikale Falte auf der mittleren Achsellinie' },
-  { key: 'suprailiac', name: 'Suprailiac', description: 'Diagonale Falte über dem Hüftknochen' },
-  { key: 'abdominal', name: 'Bauch', description: 'Vertikale Falte 2cm seitlich vom Bauchnabel' },
-  { key: 'thigh', name: 'Oberschenkel', description: 'Vertikale Falte auf der Vorderseite des Oberschenkels' },
-  { key: 'lowerBack', name: 'Unterer Rücken', description: 'Diagonale Falte über dem Beckenkamm' },
-  { key: 'calf', name: 'Wade', description: 'Vertikale Falte auf der Innenseite der Wade' },
-  { key: 'chin', name: 'Kinn', description: 'Vertikale Falte unter dem Kinn' },
-  { key: 'cheek', name: 'Wange', description: 'Vertikale Falte auf der Wange' },
-  { key: 'hamstring', name: 'Hamstring', description: 'Vertikale Falte auf der Rückseite des Oberschenkels' },
-  { key: 'quad', name: 'Quadrizeps', description: 'Vertikale Falte auf dem Quadrizeps' },
-  { key: 'knee', name: 'Knie', description: 'Vertikale Falte über der Kniescheibe' },
+const stats = {
+  totalMeasurements: 156,
+  measurementsThisWeek: 12,
+  averageBodyFatChange: -1.8,
+  clientsImproving: 38,
+};
+
+const topProgressClients = [
+  { name: 'Max Mustermann', packageType: 'personal_training' as PackageType, change: '-2.3% Körperfett', trend: 'down' },
+  { name: 'Lisa Müller', packageType: 'online_coaching' as PackageType, change: '+1.2kg Muskelmasse', trend: 'up' },
+  { name: 'Tom Weber', packageType: 'training_consultation' as PackageType, change: '-3.5kg Gewicht', trend: 'down' },
+];
+
+const upcomingMeasurements = [
+  { name: 'Tom Weber', daysUntil: 2 },
+  { name: 'Anna Schmidt', daysUntil: 5 },
+  { name: 'Sarah Johnson', daysUntil: 7 },
 ];
 
 export default function MeasurementsPage() {
-  const [showForm, setShowForm] = useState(false);
-  const [selectedClient, setSelectedClient] = useState('');
-  const [formData, setFormData] = useState({
-    weight: '',
-    measurements: Object.fromEntries(ypsiSites.map(site => [site.key, ''])),
-  });
+  const [selectedMeasurement, setSelectedMeasurement] = useState<typeof measurements[0] | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [selectedClientForHistory, setSelectedClientForHistory] = useState<{ name: string; packageType: PackageType } | null>(null);
+  const [showWizard, setShowWizard] = useState(false);
+  const [wizardConfig, setWizardConfig] = useState<{ clientId: string; clientName: string; type: 'full' | 'quick' } | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterPeriod, setFilterPeriod] = useState('all');
+  const [activeTab, setActiveTab] = useState<'overview' | 'table'>('overview');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Submitting measurements:', { client: selectedClient, ...formData });
-    setShowForm(false);
-    setFormData({
-      weight: '',
-      measurements: Object.fromEntries(ypsiSites.map(site => [site.key, ''])),
-    });
+  const handleStartMeasurement = (clientId: string, type: 'full' | 'quick') => {
+    // TODO: Get client name from API
+    const client = measurements.find(m => m.clientId === clientId);
+    if (client) {
+      setWizardConfig({ clientId, clientName: client.client, type });
+      setShowWizard(true);
+    }
   };
+
+  const handleViewMeasurementDetails = (measurementId: number) => {
+    const measurement = measurements.find(m => m.id === measurementId);
+    if (measurement) {
+      setSelectedMeasurement(measurement);
+      setShowDetailModal(true);
+    }
+  };
+
+  const handleWizardSubmit = (data: any) => {
+    console.log('New measurement:', data);
+    // TODO: API call to save measurement
+    setShowWizard(false);
+    setWizardConfig(null);
+  };
+
+  const filteredMeasurements = measurements.filter(m =>
+    m.client.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">Messungen</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Körpermessungen nach der YPSI Hautfaltenmethode
+            Verfolge die Fortschritte deiner Kunden mit der YPSI Hautfaltenmethode
           </p>
         </div>
-        <button 
-          onClick={() => setShowForm(true)}
-          className="btn-primary"
-        >
-          <PlusIcon className="mr-2 h-5 w-5" />
-          Neue Messung
-        </button>
+        
+        {/* Tab Navigation */}
+        <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-lg">
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`px-4 py-2 rounded-md transition-colors ${
+              activeTab === 'overview' 
+                ? 'bg-white text-gray-900 shadow-sm' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Übersicht
+          </button>
+          <button
+            onClick={() => setActiveTab('table')}
+            className={`px-4 py-2 rounded-md transition-colors ${
+              activeTab === 'table' 
+                ? 'bg-white text-gray-900 shadow-sm' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Tabelle
+          </button>
+        </div>
       </div>
 
-      {showForm && (
+      {activeTab === 'overview' ? (
+        <>
+          {/* Stats Overview */}
+          <MeasurementStats stats={stats} />
+
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Quick Measurement Card */}
+            <div className="lg:col-span-1">
+              <QuickMeasurementCard onStartMeasurement={handleStartMeasurement} />
+            </div>
+
+            {/* Recent Activity */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Top Progress */}
+              <div className="card">
+                <div className="card-body">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Top Fortschritte</h3>
+                    <span className="text-sm text-gray-500">Letzte 30 Tage</span>
+                  </div>
+                  <div className="space-y-3">
+                    {topProgressClients.map((client, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <ClientAvatar 
+                            name={client.name} 
+                            packageType={client.packageType}
+                            size="sm"
+                          />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">{client.name}</p>
+                            <p className={`text-xs ${client.trend === 'down' ? 'text-green-600' : 'text-blue-600'}`}>
+                              {client.change}
+                            </p>
+                          </div>
+                        </div>
+                        <ChartBarIcon className={`h-5 w-5 ${client.trend === 'down' ? 'text-green-500' : 'text-blue-500'}`} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Upcoming Measurements */}
+              <div className="card">
+                <div className="card-body">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Anstehende Messungen</h3>
+                    <CalendarIcon className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <div className="space-y-3">
+                    {upcomingMeasurements.map((client, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-amber-100 rounded-lg">
+                            <CalendarIcon className="h-4 w-4 text-amber-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">{client.name}</p>
+                            <p className="text-xs text-gray-500">Fällig in {client.daysUntil} Tagen</p>
+                          </div>
+                        </div>
+                        <button className="text-sm text-primary-600 hover:text-primary-700 font-medium">
+                          Termin planen
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        /* Table View */
         <div className="card">
           <div className="card-body">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Neue Messung erfassen</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div>
-                  <label className="label">Kunde</label>
-                  <select 
-                    className="input"
-                    value={selectedClient}
-                    onChange={(e) => setSelectedClient(e.target.value)}
-                    required
-                  >
-                    <option value="">Kunde auswählen...</option>
-                    <option value="1">Max Mustermann</option>
-                    <option value="2">Anna Schmidt</option>
-                    <option value="3">Tom Weber</option>
-                    <option value="4">Lisa Müller</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="label">Gewicht (kg)</label>
+            {/* Table Controls */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <input
-                    type="number"
-                    step="0.1"
-                    className="input"
-                    value={formData.weight}
-                    onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
-                    placeholder="85.5"
-                    required
+                    type="text"
+                    placeholder="Kunde suchen..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
-              </div>
-
-              <div>
-                <h3 className="text-base font-semibold text-gray-900 mb-4">Hautfaltenmessungen (mm)</h3>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {ypsiSites.map((site) => (
-                    <div key={site.key}>
-                      <label className="label">{site.name}</label>
-                      <input
-                        type="number"
-                        step="0.5"
-                        className="input"
-                        value={formData.measurements[site.key]}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          measurements: { ...formData.measurements, [site.key]: e.target.value }
-                        })}
-                        placeholder="0"
-                      />
-                      <p className="mt-1 text-xs text-gray-500">{site.description}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-3">
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="btn-secondary"
+                <select
+                  value={filterPeriod}
+                  onChange={(e) => setFilterPeriod(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
-                  Abbrechen
-                </button>
-                <button type="submit" className="btn-primary">
-                  Messung speichern
-                </button>
+                  <option value="all">Alle Zeiten</option>
+                  <option value="week">Diese Woche</option>
+                  <option value="month">Dieser Monat</option>
+                  <option value="quarter">Dieses Quartal</option>
+                </select>
               </div>
-            </form>
+              <button className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900">
+                <ArrowDownTrayIcon className="h-5 w-5" />
+                Export
+              </button>
+            </div>
+
+            {/* Table */}
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+                <thead>
+                  <tr className="border-b border-gray-200">
+                    <th className="pb-3 text-left text-sm font-semibold text-gray-900">
+                      <div className="flex items-center gap-1">
+                        Kunde
+                        <span className="text-xs font-normal text-gray-500">(klicken für Historie)</span>
+                      </div>
+                    </th>
+                    <th className="pb-3 text-left text-sm font-semibold text-gray-900">Datum</th>
+                    <th className="pb-3 text-left text-sm font-semibold text-gray-900">Gewicht</th>
+                    <th className="pb-3 text-left text-sm font-semibold text-gray-900">Körperfett %</th>
+                    <th className="pb-3 text-left text-sm font-semibold text-gray-900">Muskelmasse</th>
+                    <th className="pb-3 text-left text-sm font-semibold text-gray-900">Summe Hautfalten</th>
+                    <th className="pb-3 text-left text-sm font-semibold text-gray-900"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredMeasurements.map((measurement) => {
+                    const totalSkinfold = Object.values(measurement.measurements).reduce((sum, val) => sum + val, 0);
+                    return (
+                      <tr key={measurement.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="py-4">
+                          <div 
+                            className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
+                            onClick={() => {
+                              setSelectedClientForHistory({ 
+                                name: measurement.client, 
+                                packageType: measurement.packageType 
+                              });
+                              setShowHistoryModal(true);
+                            }}
+                          >
+                            <ClientAvatar 
+                              name={measurement.client} 
+                              packageType={measurement.packageType}
+                              size="sm"
+                            />
+                            <span className="ml-3 text-sm font-medium text-gray-900 hover:text-primary-600 transition-colors">
+                              {measurement.client}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-4 text-sm text-gray-900">
+                          {formatDate(measurement.date, 'long')}
+                        </td>
+                        <td className="py-4 text-sm text-gray-900">{measurement.weight} kg</td>
+                        <td className="py-4 text-sm text-gray-900">{measurement.bodyFat}%</td>
+                        <td className="py-4 text-sm text-gray-900">{measurement.muscleMass} kg</td>
+                        <td className="py-4 text-sm text-gray-900">{totalSkinfold} mm</td>
+                        <td className="py-4 text-right">
+                          <button 
+                            onClick={() => {
+                              setSelectedMeasurement(measurement);
+                              setShowDetailModal(true);
+                            }}
+                            className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                          >
+                            Details
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
 
-      <div className="card">
-        <div className="card-body">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Letzte Messungen</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="pb-3 text-left text-sm font-semibold text-gray-900">Kunde</th>
-                  <th className="pb-3 text-left text-sm font-semibold text-gray-900">Datum</th>
-                  <th className="pb-3 text-left text-sm font-semibold text-gray-900">Gewicht</th>
-                  <th className="pb-3 text-left text-sm font-semibold text-gray-900">Körperfett %</th>
-                  <th className="pb-3 text-left text-sm font-semibold text-gray-900">Muskelmasse</th>
-                  <th className="pb-3 text-left text-sm font-semibold text-gray-900">Summe Hautfalten</th>
-                  <th className="pb-3 text-left text-sm font-semibold text-gray-900"></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {measurements.map((measurement) => {
-                  const totalSkinfold = Object.values(measurement.measurements).reduce((sum, val) => sum + val, 0);
-                  return (
-                    <tr key={measurement.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="py-4">
-                        <div className="flex items-center">
-                          <ClientAvatar 
-                            name={measurement.client} 
-                            packageType={measurement.packageType}
-                            size="sm"
-                          />
-                          <span className="ml-3 text-sm font-medium text-gray-900">{measurement.client}</span>
-                        </div>
-                      </td>
-                      <td className="py-4 text-sm text-gray-900">
-                        {new Date(measurement.date).toLocaleDateString('de-DE')}
-                      </td>
-                      <td className="py-4 text-sm text-gray-900">{measurement.weight} kg</td>
-                      <td className="py-4 text-sm text-gray-900">{measurement.bodyFat}%</td>
-                      <td className="py-4 text-sm text-gray-900">{measurement.muscleMass} kg</td>
-                      <td className="py-4 text-sm text-gray-900">{totalSkinfold} mm</td>
-                      <td className="py-4 text-right">
-                        <button className="text-sm text-primary-600 hover:text-primary-700">
-                          Details
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      {/* Modals */}
+      <MeasurementDetailModal
+        isOpen={showDetailModal}
+        onClose={() => {
+          setShowDetailModal(false);
+          setSelectedMeasurement(null);
+        }}
+        measurement={selectedMeasurement}
+      />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="card">
-          <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Top Fortschritte diese Woche</h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <ClientAvatar 
-                    name="Max Mustermann" 
-                    packageType="personal_training"
-                    size="sm"
-                    className="opacity-20"
-                  />
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-900">Max Mustermann</p>
-                    <p className="text-xs text-gray-500">-2.3% Körperfett</p>
-                  </div>
-                </div>
-                <ChartBarIcon className="h-5 w-5 text-success" />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <ClientAvatar 
-                    name="Lisa Müller" 
-                    packageType="online_coaching"
-                    size="sm"
-                    className="opacity-20"
-                  />
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-900">Lisa Müller</p>
-                    <p className="text-xs text-gray-500">+1.2kg Muskelmasse</p>
-                  </div>
-                </div>
-                <ChartBarIcon className="h-5 w-5 text-success" />
-              </div>
-            </div>
-          </div>
-        </div>
+      {selectedClientForHistory && (
+        <ClientMeasurementHistoryModal
+          isOpen={showHistoryModal}
+          onClose={() => {
+            setShowHistoryModal(false);
+            setSelectedClientForHistory(null);
+          }}
+          clientName={selectedClientForHistory.name}
+          packageType={selectedClientForHistory.packageType}
+          onViewDetails={handleViewMeasurementDetails}
+        />
+      )}
 
-        <div className="card">
-          <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Anstehende Messungen</h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <CalendarIcon className="h-5 w-5 text-gray-400 mr-3" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">Tom Weber</p>
-                    <p className="text-xs text-gray-500">Fällig in 2 Tagen</p>
-                  </div>
-                </div>
-                <button className="text-xs text-primary-600 hover:text-primary-700">
-                  Termin planen
-                </button>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <CalendarIcon className="h-5 w-5 text-gray-400 mr-3" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">Anna Schmidt</p>
-                    <p className="text-xs text-gray-500">Fällig in 5 Tagen</p>
-                  </div>
-                </div>
-                <button className="text-xs text-primary-600 hover:text-primary-700">
-                  Termin planen
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {showWizard && wizardConfig && (
+        <MeasurementWizard
+          isOpen={showWizard}
+          onClose={() => {
+            setShowWizard(false);
+            setWizardConfig(null);
+          }}
+          clientId={wizardConfig.clientId}
+          clientName={wizardConfig.clientName}
+          measurementType={wizardConfig.type}
+          onSubmit={handleWizardSubmit}
+        />
+      )}
     </div>
   );
 }

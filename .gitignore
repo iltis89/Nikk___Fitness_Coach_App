@@ -51,6 +51,12 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 
+# Feedback automation state files
+.feedback-processor-state.json
+.feedback-state.json
+.feedback-processor-state*.json
+.feedback-state*.json
+
 # Logs
 logs/
 *.log

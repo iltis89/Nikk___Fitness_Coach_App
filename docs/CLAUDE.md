@@ -2,6 +2,18 @@
 
 ## 🚀 Development Quick Reference
 
+### API Implementation Status (20% Complete)
+- ✅ Authentication (95% - missing password reset)
+- ✅ Client CRUD (80% - missing progress tracking)  
+- ✅ Basic Measurements (20%)
+- ❌ Training Plans, Workouts, Nutrition, AI Services, Messages, Analytics
+
+### Critical TODOs for MVP
+1. Complete Training Plans API
+2. Implement AI Services (Priority 1!)
+3. Add Measurement Tracking
+4. Start Mobile App Development
+
 ### Power Commands (Empfohlen)
 ```
 FEATURE-ADD: [Name]    → Komplettes Feature automatisch
@@ -27,8 +39,12 @@ REVIEW: → Code prüfen
 3. Command: `FEEDBACK-REVIEW` triggern
 4. Claude analysiert und setzt automatisch um
 
-**Hauptdokumentation**: [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)
-**UI-Spezifisch**: [UI_SWARM_WORKFLOW.md](./UI_SWARM_WORKFLOW.md)
+### 📚 Wichtige Dokumentation
+- **Development**: [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)
+- **UI Workflow**: [UI_SWARM_WORKFLOW.md](./UI_SWARM_WORKFLOW.md)
+- **API Status**: [API_STATUS.md](./API_STATUS.md)
+- **Database**: [DATABASE_SCHEMA.md](./DATABASE_SCHEMA.md)
+- **Feedback**: [AUTOMATED_FEEDBACK_WORKFLOW.md](./AUTOMATED_FEEDBACK_WORKFLOW.md)
 
 ## Projektübersicht
 Dies ist eine Fitness-Coaching-Plattform für Nikk Viererbl (NV Coaching), bestehend aus einem Trainer-Dashboard und einer Kunden-App.
@@ -125,12 +141,18 @@ npm run format
 - Fokus auf Benutzerfreundlichkeit für 50+ Jährige
 - Video-Uploads benötigen gute Kompression & CDN
 
-## Nächste Schritte
-1. Prisma Schema für Datenmodelle erstellen
-2. API-Endpunkte definieren
-3. UI-Komponenten-Library aufbauen
-4. KI-Services integrieren
-5. Offline-Sync implementieren
+## Aktuelle Entwicklungsprioritäten
+1. **API Vervollständigen** (80% fehlen noch!)
+   - Training Plans System implementieren
+   - AI Services aufbauen (Digital Twin)
+   - Measurement Tracking erweitern
+2. **Mobile App starten** (0% implementiert)
+3. **Performance optimieren** für 50+ Zielgruppe
+4. **Offline-Sync** für Kern-Features
+
+## Feature Ideas
+### Dashboard Customization
+- SWARM-MAX: Integrate a function in the dashboard where individual elements are flexibly adjustable. The trainer should be able to manually customize the dashboard as desired.
 
 ## Projekt-Konventionen
 - **Branches**: `feature/`, `fix/`, `chore/` Präfixe verwenden

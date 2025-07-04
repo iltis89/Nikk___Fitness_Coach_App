@@ -8,15 +8,25 @@ import {
   DocumentTextIcon,
   CalendarIcon,
   ChatBubbleLeftRightIcon,
-  CameraIcon
+  CameraIcon,
+  EnvelopeIcon,
+  PhoneIcon,
+  MapPinIcon,
+  UserIcon,
+  CalendarDaysIcon,
+  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { ClientAvatar } from '@/components/ui';
+import { ClientAvatar, EditableField, EditableSelect, EditableList, EditableSupplements } from '@/components/ui';
 import { PackageType } from '@nv/shared/src/types/package';
+import { formatDate, calculateAge } from '@/utils/dateFormatters';
 
+// Mock data - TODO: Replace with API call
 const client = {
   id: 1,
   name: 'Max Mustermann',
+  firstName: 'Max',
+  lastName: 'Mustermann',
   email: 'max@example.com',
   phone: '+49 123 456789',
   birthDate: '1989-03-15',
@@ -61,177 +71,300 @@ const client = {
   ],
 };
 
-const tabs = [
-  { name: 'Übersicht', icon: ChartBarIcon },
-  { name: 'Messungen', icon: ChartBarIcon },
-  { name: 'Trainingspläne', icon: DocumentTextIcon },
-  { name: 'Termine', icon: CalendarIcon },
-  { name: 'Nachrichten', icon: ChatBubbleLeftRightIcon },
+const packageOptions = [
+  { value: 'personal_training', label: 'Personal Training' },
+  { value: 'small_group', label: 'Small Group' },
+  { value: 'online_coaching', label: 'Online Coaching' },
+  { value: 'nutrition_only', label: 'Nur Ernährung' },
+];
+
+const statusOptions = [
+  { value: 'active', label: 'Aktiv' },
+  { value: 'inactive', label: 'Inaktiv' },
+  { value: 'paused', label: 'Pausiert' },
 ];
 
 export default function ClientDetailPage({ params }: { params: { id: string } }) {
-  const [activeTab, setActiveTab] = useState('Übersicht');
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingField, setEditingField] = useState<string | null>(null);
+  const [clientData, setClientData] = useState(client);
+
+  const handleSave = async (field: string, value: any) => {
+    // TODO: API call to update client
+    console.log('Saving', field, value);
+    
+    // Mock update
+    setClientData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+  };
+
+  const handleFieldEdit = (field: string, isEditing: boolean) => {
+    if (isEditing) {
+      setEditingField(field);
+    } else if (editingField === field) {
+      setEditingField(null);
+    }
+  };
+
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link href="/dashboard/clients" className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <ArrowLeftIcon className="h-5 w-5 text-gray-600" />
           </Link>
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">{client.name}</h1>
-            <p className="text-sm text-gray-500">Kunde seit {new Date(client.joinDate).toLocaleDateString('de-DE')}</p>
+            <h1 className="text-2xl font-semibold text-gray-900">{clientData.name}</h1>
+            <p className="text-sm text-gray-500">Kunde seit {formatDate(clientData.joinDate, 'long')}</p>
           </div>
         </div>
-        <Link 
-          href={`/dashboard/clients/${params.id}/edit`}
-          className="btn-primary inline-flex items-center"
+        <button 
+          onClick={() => setIsEditMode(!isEditMode)}
+          className={`btn-${isEditMode ? 'secondary' : 'primary'} inline-flex items-center`}
         >
           <PencilIcon className="mr-2 h-5 w-5" />
-          Bearbeiten
-        </Link>
+          {isEditMode ? 'Bearbeitung beenden' : 'Bearbeiten'}
+        </button>
       </div>
 
-      <div className="card">
-        <div className="card-body">
-          <div className="flex flex-col md:flex-row md:items-start md:space-x-6">
-            <div className="flex-shrink-0">
-              <div className="relative">
-                <ClientAvatar 
-                  name={client.name} 
-                  packageType={client.packageType}
-                  size="xl"
-                />
-                <button className="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors">
-                  <CameraIcon className="h-5 w-5 text-gray-600" />
-                </button>
-              </div>
-              <div className="mt-4 text-center">
-                <span className={`badge ${client.status === 'active' ? 'badge-success' : 'badge-warning'}`}>
-                  {client.status === 'active' ? 'Aktiv' : 'Inaktiv'}
-                </span>
-              </div>
-            </div>
-            
-            <div className="mt-6 md:mt-0 flex-1">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500">Kontaktinformationen</h3>
-                  <dl className="mt-2 space-y-1">
-                    <div>
-                      <dt className="text-sm text-gray-600">E-Mail</dt>
-                      <dd className="text-sm font-medium text-gray-900">{client.email}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-sm text-gray-600">Telefon</dt>
-                      <dd className="text-sm font-medium text-gray-900">{client.phone}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-sm text-gray-600">Adresse</dt>
-                      <dd className="text-sm font-medium text-gray-900">{client.address}</dd>
-                    </div>
-                  </dl>
+      {/* Main Info Card */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Avatar & Basic Info */}
+        <div className="lg:col-span-1">
+          <div className="card">
+            <div className="card-body">
+              <div className="flex flex-col items-center">
+                <div className="relative">
+                  <ClientAvatar 
+                    name={clientData.name} 
+                    packageType={clientData.packageType}
+                    size="xl"
+                  />
+                  <button className="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors">
+                    <CameraIcon className="h-5 w-5 text-gray-600" />
+                  </button>
+                </div>
+                <div className="mt-4 text-center">
+                  {isEditMode ? (
+                    <EditableSelect
+                      value={clientData.status}
+                      options={statusOptions}
+                      onSave={(value) => handleSave('status', value)}
+                      isEditing={editingField === 'status'}
+                      onEditingChange={(isEditing) => handleFieldEdit('status', isEditing)}
+                    />
+                  ) : (
+                    <span className={`badge ${clientData.status === 'active' ? 'badge-success' : 'badge-warning'}`}>
+                      {clientData.status === 'active' ? 'Aktiv' : 'Inaktiv'}
+                    </span>
+                  )}
                 </div>
                 
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500">Persönliche Informationen</h3>
-                  <dl className="mt-2 space-y-1">
-                    <div>
-                      <dt className="text-sm text-gray-600">Geburtsdatum</dt>
-                      <dd className="text-sm font-medium text-gray-900">
-                        {new Date(client.birthDate).toLocaleDateString('de-DE')} 
-                        ({new Date().getFullYear() - new Date(client.birthDate).getFullYear()} Jahre)
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-sm text-gray-600">Notfallkontakt</dt>
-                      <dd className="text-sm font-medium text-gray-900">{client.emergencyContact}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-sm text-gray-600">Aktueller Plan</dt>
-                      <dd className="text-sm font-medium text-gray-900">{client.currentPlan}</dd>
-                    </div>
-                  </dl>
-                </div>
-              </div>
-              
-              <div className="mt-4">
-                <h3 className="text-sm font-medium text-gray-500">Ziele</h3>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {client.goals.map((goal, index) => (
-                    <span key={index} className="badge badge-primary">{goal}</span>
-                  ))}
-                </div>
-              </div>
-              
-              {client.medicalConditions.length > 0 && (
-                <div className="mt-4">
-                  <h3 className="text-sm font-medium text-gray-500">Medizinische Hinweise</h3>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {client.medicalConditions.map((condition, index) => (
-                      <span key={index} className="badge badge-warning">{condition}</span>
-                    ))}
+                <div className="mt-6 w-full space-y-4">
+                  <div className="text-center">
+                    <p className="text-sm text-gray-500">Paket</p>
+                    {isEditMode ? (
+                      <EditableSelect
+                        value={clientData.packageType}
+                        options={packageOptions}
+                        onSave={(value) => handleSave('packageType', value)}
+                        isEditing={editingField === 'packageType'}
+                        onEditingChange={(isEditing) => handleFieldEdit('packageType', isEditing)}
+                      />
+                    ) : (
+                      <p className="text-sm font-semibold text-gray-900 mt-1">
+                        {packageOptions.find(opt => opt.value === clientData.packageType)?.label}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="text-center">
+                    <p className="text-sm text-gray-500">Aktueller Plan</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-1">{clientData.currentPlan}</p>
                   </div>
                 </div>
-              )}
-              
-              {client.supplements && client.supplements.length > 0 && (
-                <div className="mt-4">
-                  <h3 className="text-sm font-medium text-gray-500">Supplements</h3>
-                  <div className="mt-2 space-y-2">
-                    {client.supplements.map((supplement, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                        <span className="text-sm font-medium text-gray-900">{supplement.name}</span>
-                        <span className="text-xs text-gray-500">
-                          Seit {new Date(supplement.startDate).toLocaleDateString('de-DE')}
-                        </span>
-                      </div>
-                    ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column - Contact & Personal Info */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Contact Information */}
+          <div className="card">
+            <div className="card-body">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Kontaktinformationen</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <EnvelopeIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                    <EditableField
+                      value={clientData.email}
+                      onSave={(value) => handleSave('email', value)}
+                      type="email"
+                      label="E-Mail"
+                      isEditing={isEditMode && editingField === 'email'}
+                      onEditingChange={(isEditing) => handleFieldEdit('email', isEditing)}
+                      className="flex-1"
+                    />
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <PhoneIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                    <EditableField
+                      value={clientData.phone}
+                      onSave={(value) => handleSave('phone', value)}
+                      type="tel"
+                      label="Telefon"
+                      isEditing={isEditMode && editingField === 'phone'}
+                      onEditingChange={(isEditing) => handleFieldEdit('phone', isEditing)}
+                      className="flex-1"
+                    />
                   </div>
                 </div>
-              )}
+                
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <MapPinIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                    <EditableField
+                      value={clientData.address}
+                      onSave={(value) => handleSave('address', value)}
+                      label="Adresse"
+                      isEditing={isEditMode && editingField === 'address'}
+                      onEditingChange={(isEditing) => handleFieldEdit('address', isEditing)}
+                      className="flex-1"
+                    />
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <ExclamationTriangleIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                    <EditableField
+                      value={clientData.emergencyContact}
+                      onSave={(value) => handleSave('emergencyContact', value)}
+                      label="Notfallkontakt"
+                      isEditing={isEditMode && editingField === 'emergencyContact'}
+                      onEditingChange={(isEditing) => handleFieldEdit('emergencyContact', isEditing)}
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Personal Information */}
+          <div className="card">
+            <div className="card-body">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Persönliche Informationen</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex items-start gap-3">
+                  <CalendarDaysIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                  <div className="flex-1">
+                    <EditableField
+                      value={clientData.birthDate}
+                      onSave={(value) => handleSave('birthDate', value)}
+                      type="date"
+                      label="Geburtsdatum"
+                      isEditing={isEditMode && editingField === 'birthDate'}
+                      onEditingChange={(isEditing) => handleFieldEdit('birthDate', isEditing)}
+                    />
+                    {!isEditMode && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        {calculateAge(clientData.birthDate)} Jahre alt
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Goals, Medical, Supplements */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="card">
+          <div className="card-body">
+            <EditableList
+              items={clientData.goals}
+              onSave={(items) => handleSave('goals', items)}
+              label="Trainingsziele"
+              placeholder="Neues Ziel hinzufügen"
+              isEditing={isEditMode && editingField === 'goals'}
+              onEditingChange={(isEditing) => handleFieldEdit('goals', isEditing)}
+              badgeColor="primary"
+            />
+            
+            <div className="mt-6">
+              <EditableList
+                items={clientData.medicalConditions}
+                onSave={(items) => handleSave('medicalConditions', items)}
+                label="Medizinische Hinweise"
+                placeholder="Neuen Hinweis hinzufügen"
+                isEditing={isEditMode && editingField === 'medicalConditions'}
+                onEditingChange={(isEditing) => handleFieldEdit('medicalConditions', isEditing)}
+                badgeColor="warning"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-body">
+            <EditableSupplements
+              supplements={clientData.supplements}
+              onSave={(supplements) => handleSave('supplements', supplements)}
+              isEditing={isEditMode && editingField === 'supplements'}
+              onEditingChange={(isEditing) => handleFieldEdit('supplements', isEditing)}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Progress, Appointments, Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="card">
           <div className="card-body">
             <h3 className="text-base font-semibold text-gray-900 mb-4">Aktuelle Fortschritte</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center pb-3 border-b">
                 <span className="text-sm text-gray-600">Gewicht</span>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-gray-900">{client.measurements.latest.weight} kg</p>
-                  <p className={`text-xs ${client.progress.weightChange < 0 ? 'text-success' : 'text-error'}`}>
-                    {client.progress.weightChange > 0 ? '+' : ''}{client.progress.weightChange} kg
+                  <p className="text-sm font-semibold text-gray-900">{clientData.measurements.latest.weight} kg</p>
+                  <p className={`text-xs ${clientData.progress.weightChange < 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {clientData.progress.weightChange > 0 ? '+' : ''}{clientData.progress.weightChange} kg
                   </p>
                 </div>
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center pb-3 border-b">
                 <span className="text-sm text-gray-600">Körperfett</span>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-gray-900">{client.measurements.latest.bodyFat}%</p>
-                  <p className={`text-xs ${client.progress.bodyFatChange < 0 ? 'text-success' : 'text-error'}`}>
-                    {client.progress.bodyFatChange > 0 ? '+' : ''}{client.progress.bodyFatChange}%
+                  <p className="text-sm font-semibold text-gray-900">{clientData.measurements.latest.bodyFat}%</p>
+                  <p className={`text-xs ${clientData.progress.bodyFatChange < 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {clientData.progress.bodyFatChange > 0 ? '+' : ''}{clientData.progress.bodyFatChange}%
                   </p>
                 </div>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Muskelmasse</span>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-gray-900">{client.measurements.latest.muscleMass} kg</p>
-                  <p className={`text-xs ${client.progress.muscleMassChange > 0 ? 'text-success' : 'text-error'}`}>
-                    {client.progress.muscleMassChange > 0 ? '+' : ''}{client.progress.muscleMassChange} kg
+                  <p className="text-sm font-semibold text-gray-900">{clientData.measurements.latest.muscleMass} kg</p>
+                  <p className={`text-xs ${clientData.progress.muscleMassChange > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {clientData.progress.muscleMassChange > 0 ? '+' : ''}{clientData.progress.muscleMassChange} kg
                   </p>
                 </div>
               </div>
             </div>
             <div className="mt-4 pt-4 border-t">
-              <p className="text-xs text-gray-500">
-                Letzte Messung: {new Date(client.measurements.latest.date).toLocaleDateString('de-DE')}
+              <p className="text-xs text-gray-500 text-center">
+                Letzte Messung: {formatDate(clientData.measurements.latest.date, 'long')}
               </p>
             </div>
           </div>
@@ -241,11 +374,11 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
           <div className="card-body">
             <h3 className="text-base font-semibold text-gray-900 mb-4">Nächste Termine</h3>
             <div className="space-y-3">
-              {client.upcomingAppointments.map((appointment, index) => (
-                <div key={index} className="flex items-center justify-between">
+              {clientData.upcomingAppointments.map((appointment, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <div>
                     <p className="text-sm font-medium text-gray-900">
-                      {new Date(appointment.date).toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'short' })}
+                      {formatDate(appointment.date, 'short')}
                     </p>
                     <p className="text-xs text-gray-500">{appointment.time} - {appointment.type}</p>
                   </div>
@@ -254,7 +387,7 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
               ))}
             </div>
             <div className="mt-4 pt-4 border-t">
-              <Link href="/dashboard/calendar" className="text-sm text-primary-600 hover:text-primary-700">
+              <Link href="/dashboard/calendar" className="text-sm text-primary-600 hover:text-primary-700 font-medium">
                 Alle Termine anzeigen →
               </Link>
             </div>
@@ -282,11 +415,24 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
         </div>
       </div>
 
-      {client.notes && (
+      {/* Notes */}
+      {(clientData.notes || isEditMode) && (
         <div className="card">
           <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-2">Notizen</h3>
-            <p className="text-sm text-gray-600">{client.notes}</p>
+            <h3 className="text-base font-semibold text-gray-900 mb-3">Trainer-Notizen</h3>
+            {isEditMode ? (
+              <EditableField
+                value={clientData.notes}
+                onSave={(value) => handleSave('notes', value)}
+                isEditing={editingField === 'notes'}
+                onEditingChange={(isEditing) => handleFieldEdit('notes', isEditing)}
+                multiline
+                placeholder="Notizen zum Kunden hinzufügen..."
+                className="mt-2"
+              />
+            ) : (
+              <p className="text-sm text-gray-600 leading-relaxed">{clientData.notes}</p>
+            )}
           </div>
         </div>
       )}

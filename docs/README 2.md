@@ -1,51 +1,30 @@
-# NV Coaching Platform - Dokumentation
+# 📸 Feedback Screenshots Workflow
 
-## 📍 Hauptdokumentation
+## Workflow-Anleitung
 
-- **[DEVELOPMENT_GUIDE.md](../DEVELOPMENT_GUIDE.md)** - 🚀 Zentrale Entwicklungsanleitung (START HIER!)
-- **[CLAUDE.md](../CLAUDE.md)** - Quick Reference für Commands
+1. **Screenshots erstellen**: Nutze Screenshot-Tool mit Annotationen
+2. **Benennung**: `01_dashboard.png`, `02_clients.png`, etc.
+3. **Ablage**: Alle Screenshots in diesem Ordner speichern
+4. **Claude triggern**: Einfach "FEEDBACK-REVIEW" schreiben
 
-## 📁 Projekt-Dokumentation
+## Claude's Analyse-Prozess
 
-### Setup & Standards
-- [README.md](../README.md) - Projekt-Übersicht
-- [CODING_STANDARDS.md](CODING_STANDARDS.md) - Code-Standards
-- [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) - Git Workflow
+Für jeden Screenshot:
+1. **Visuell analysieren**: Was soll geändert werden?
+2. **Sub-Agent zuweisen**: 
+   - UI-UPDATE: Für Design-Änderungen
+   - FEATURE-ADD: Für neue Funktionen
+   - FIX: Für Bug-Fixes
+3. **Automatische Umsetzung**: Mit Priorität nach Nummer
 
-### Technische Specs
-- [API_STATUS.md](API_STATUS.md) - 🚧 Aktueller API Status (READ FIRST!)
-- [DATABASE_SCHEMA.md](DATABASE_SCHEMA.md) - Datenbank-Schema
-- [TRAINING_SYSTEM_IMPLEMENTATION_PLAN.md](TRAINING_SYSTEM_IMPLEMENTATION_PLAN.md) - Trainings-System
+## Beispiel-Kommentare auf Screenshots
 
-### Archive/Specs
-- [_SPECIFICATION_API_ENDPOINTS.md](_SPECIFICATION_API_ENDPOINTS.md) - Future API Spec
+- "Button größer machen"
+- "Farbe ändern zu Blau"
+- "Neues Feature: Export-Button"
+- "Text ändern zu..."
+- "Spacing vergrößern"
 
-### Business & Features
-- [NIKK_BUSINESS_METRICS.md](NIKK_BUSINESS_METRICS.md) - Business KPIs & Requirements
-- [AI_DIGITAL_TWIN_CONCEPT.md](AI_DIGITAL_TWIN_CONCEPT.md) - KI-Features
+## Status-Tracking
 
-### Deployment & Ops
-- [README_DEPLOYMENT.md](README_DEPLOYMENT.md) - Deployment Guide
-- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Fehlerbehebung
-
-## 🎯 Spezialisierte Guides
-
-- [UI_SWARM_WORKFLOW.md](../UI_SWARM_WORKFLOW.md) - UI-Update Workflow
-
-## ⚠️ Deprecated
-
-Siehe [DEPRECATED_DOCS.md](DEPRECATED_DOCS.md) für veraltete Dokumentation
-
-## Struktur
-
-```
-nv-coaching-platform/
-├── README.md              # Haupt-README (bleibt im Root)
-├── CLAUDE.md             # KI-Instruktionen (bleibt im Root)
-├── CLAUDE.local.md       # Lokale Notizen (bleibt im Root)
-└── docs/                 # Alle anderen Dokumentationen
-    ├── README.md         # Diese Datei
-    ├── API_ENDPOINTS.md
-    ├── DATABASE_SCHEMA.md
-    └── ...
-```
+Claude erstellt automatisch eine TODO-Liste mit allen gefundenen Tasks.
