@@ -1,0 +1,17 @@
+[build]
+builder = "nixpacks"
+buildCommand = "npm install && npm run build"
+
+[deploy]
+startCommand = "npm run start"
+healthcheckPath = "/"
+healthcheckTimeout = 300
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
+
+[[services]]
+name = "nv-coaching-trainer-dashboard"
+type = "web"
+
+[services.nv-coaching-trainer-dashboard]
+port = 3000
