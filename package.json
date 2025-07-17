@@ -10,7 +10,7 @@
     "dev": "turbo run dev",
     "dev:dashboard": "npm run dev --workspace=trainer-dashboard",
     "dev:api": "npm run dev --workspace=@nv/api",
-    "build": "turbo run build",
+    "build": "turbo run build --filter=trainer-dashboard",
     "start": "cd apps/trainer-dashboard && npm run start",
     "lint": "turbo run lint",
     "test": "turbo run test",

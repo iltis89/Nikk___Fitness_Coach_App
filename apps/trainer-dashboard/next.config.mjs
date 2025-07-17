@@ -14,6 +14,11 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   
+  // Disable static page generation for error pages
+  experimental: {
+    runtime: 'nodejs',
+  },
+  
   // Webpack-Optimierungen für Hero Icons
   webpack: (config) => {
     // Disable barrel optimization for hero icons to prevent timeout
