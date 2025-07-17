@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { 
   ArrowLeftIcon,
+  ArrowRightIcon,
   PlayIcon,
   StopIcon,
   PlusIcon,
@@ -14,6 +15,7 @@ import {
   InformationCircleIcon
 } from '@heroicons/react/24/outline';
 import { groupExercisesBySupersets, parseTempoString } from '@/app/utils/training-helpers';
+import { WorkoutSummaryModal } from '@/components/training/WorkoutSummaryModal';
 
 // Beispiel-Workout mit neuen Features (wie aus Nikks Excel)
 const workout = {
@@ -41,9 +43,9 @@ const workout = {
       restSeconds: 90,
       notes: 'Langsame, kontrollierte Bewegung',
       sets: [
-        { setNumber: 1, targetReps: 6, targetWeight: 20, completed: false },
-        { setNumber: 2, targetReps: 8, targetWeight: 25, completed: false },
-        { setNumber: 3, targetReps: 8, targetWeight: 30, completed: false },
+        { setNumber: 1, targetReps: 6, targetWeight: 20, previousWeight: 17.5, previousReps: 6, completed: false },
+        { setNumber: 2, targetReps: 8, targetWeight: 25, previousWeight: 22.5, previousReps: 7, completed: false },
+        { setNumber: 3, targetReps: 8, targetWeight: 30, previousWeight: 27.5, previousReps: 8, completed: false },
       ],
     },
     {
@@ -63,9 +65,9 @@ const workout = {
       tempo: 'H/0/0/H',
       restSeconds: 90,
       sets: [
-        { setNumber: 1, targetReps: 8, targetWeight: 7.5, completed: false },
-        { setNumber: 2, targetReps: 8, targetWeight: 10, completed: false },
-        { setNumber: 3, targetReps: 8, targetWeight: 12.5, completed: false },
+        { setNumber: 1, targetReps: 8, targetWeight: 7.5, previousWeight: 5, previousReps: 8, completed: false },
+        { setNumber: 2, targetReps: 8, targetWeight: 10, previousWeight: 7.5, previousReps: 8, completed: false },
+        { setNumber: 3, targetReps: 8, targetWeight: 12.5, previousWeight: 10, previousReps: 7, completed: false },
       ],
     },
     {
@@ -85,9 +87,9 @@ const workout = {
       tempo: '4/0/1/0',
       restSeconds: 75,
       sets: [
-        { setNumber: 1, targetReps: '5 p S', targetWeight: 0, completed: false },
-        { setNumber: 2, targetReps: '7 p S', targetWeight: 0, completed: false },
-        { setNumber: 3, targetReps: '8 p S', targetWeight: 0, completed: false },
+        { setNumber: 1, targetReps: '5 p S', targetWeight: 0, previousWeight: 0, previousReps: '5 p S', completed: false },
+        { setNumber: 2, targetReps: '7 p S', targetWeight: 0, previousWeight: 0, previousReps: '6 p S', completed: false },
+        { setNumber: 3, targetReps: '8 p S', targetWeight: 0, previousWeight: 0, previousReps: '7 p S', completed: false },
       ],
     },
     {
@@ -106,9 +108,9 @@ const workout = {
       tempo: '3/0/1/2',
       restSeconds: 75,
       sets: [
-        { setNumber: 1, targetReps: 10, targetWeight: 80, equipmentSetting: 'Stufe 4', completed: false },
-        { setNumber: 2, targetReps: 10, targetWeight: 90, equipmentSetting: 'Stufe 4', completed: false },
-        { setNumber: 3, targetReps: 10, targetWeight: 100, equipmentSetting: 'Stufe 4', completed: false },
+        { setNumber: 1, targetReps: 10, targetWeight: 80, previousWeight: 70, previousReps: 10, equipmentSetting: 'Stufe 4', completed: false },
+        { setNumber: 2, targetReps: 10, targetWeight: 90, previousWeight: 80, previousReps: 10, equipmentSetting: 'Stufe 4', completed: false },
+        { setNumber: 3, targetReps: 10, targetWeight: 100, previousWeight: 90, previousReps: 9, equipmentSetting: 'Stufe 4', completed: false },
       ],
     },
     {
@@ -126,8 +128,8 @@ const workout = {
       tempo: '3/1/1/0',
       restSeconds: 120,
       sets: [
-        { setNumber: 1, targetReps: '6-8', targetWeight: 15, completed: false },
-        { setNumber: 2, targetReps: '6-8', targetWeight: 15, completed: false },
+        { setNumber: 1, targetReps: '6-8', targetWeight: 15, previousWeight: 12.5, previousReps: '7', completed: false },
+        { setNumber: 2, targetReps: '6-8', targetWeight: 15, previousWeight: 12.5, previousReps: '6', completed: false },
       ],
     },
   ],
@@ -152,23 +154,23 @@ function TempoTimer({ tempo, isActive, currentPhase }: TempoTimerProps) {
   };
 
   const phaseColors = {
-    ready: 'bg-gray-200',
-    eccentric: 'bg-red-500',
-    pause1: 'bg-yellow-500',
-    concentric: 'bg-green-500',
-    pause2: 'bg-yellow-500'
+    ready: 'bg-gray-200 dark:bg-gray-600',
+    eccentric: 'bg-red-500 dark:bg-red-600',
+    pause1: 'bg-yellow-500 dark:bg-yellow-600',
+    concentric: 'bg-green-500 dark:bg-green-600',
+    pause2: 'bg-yellow-500 dark:bg-yellow-600'
   };
 
   return (
-    <div className="mt-2 p-3 bg-gray-50 rounded-lg">
-      <div className="text-xs text-gray-600 mb-2">Tempo: {tempo}</div>
+    <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+      <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">Tempo: {tempo}</div>
       <div className="flex space-x-1">
-        <div className={`flex-1 h-2 rounded ${currentPhase === 'eccentric' ? phaseColors.eccentric : 'bg-gray-300'}`} />
-        <div className={`flex-1 h-2 rounded ${currentPhase === 'pause1' ? phaseColors.pause1 : 'bg-gray-300'}`} />
-        <div className={`flex-1 h-2 rounded ${currentPhase === 'concentric' ? phaseColors.concentric : 'bg-gray-300'}`} />
-        <div className={`flex-1 h-2 rounded ${currentPhase === 'pause2' ? phaseColors.pause2 : 'bg-gray-300'}`} />
+        <div className={`flex-1 h-2 rounded ${currentPhase === 'eccentric' ? phaseColors.eccentric : 'bg-gray-300 dark:bg-gray-600'}`} />
+        <div className={`flex-1 h-2 rounded ${currentPhase === 'pause1' ? phaseColors.pause1 : 'bg-gray-300 dark:bg-gray-600'}`} />
+        <div className={`flex-1 h-2 rounded ${currentPhase === 'concentric' ? phaseColors.concentric : 'bg-gray-300 dark:bg-gray-600'}`} />
+        <div className={`flex-1 h-2 rounded ${currentPhase === 'pause2' ? phaseColors.pause2 : 'bg-gray-300 dark:bg-gray-600'}`} />
       </div>
-      <div className="text-center mt-1 text-sm font-medium">
+      <div className="text-center mt-1 text-sm font-medium text-gray-900 dark:text-gray-100">
         {phaseNames[currentPhase]}
       </div>
     </div>
@@ -184,6 +186,14 @@ export default function WorkoutDetailPage() {
   const [completedSets, setCompletedSets] = useState<{[key: string]: boolean[]}>({});
   const [workoutData, setWorkoutData] = useState(workout);
   const [currentTempoPhase, setCurrentTempoPhase] = useState<'ready' | 'eccentric' | 'pause1' | 'concentric' | 'pause2'>('ready');
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [workoutStartTime, setWorkoutStartTime] = useState<Date | null>(null);
+  
+  // State für Supersatz-spezifische Timer
+  const [supersetTimers, setSupersetTimers] = useState<{[key: string]: number}>({});
+  const [activeSupersets, setActiveSupersets] = useState<{[key: string]: boolean}>({});
+  const [supersetRestTimers, setSupersetRestTimers] = useState<{[key: string]: number}>({});
+  const [supersetNotes, setSupersetNotes] = useState<{[key: string]: string}>({});
   
   // Group exercises by supersets
   const supersetGroups = groupExercisesBySupersets(workout.exercises);
@@ -212,17 +222,64 @@ export default function WorkoutDetailPage() {
     return () => clearInterval(interval);
   }, [isActive]);
 
-  const handleSetComplete = (exerciseId: string, setIndex: number) => {
+  // Supersatz-spezifische Timer
+  useEffect(() => {
+    const intervals: { [key: string]: NodeJS.Timeout } = {};
+    
+    Object.entries(activeSupersets).forEach(([group, isActive]) => {
+      if (isActive) {
+        intervals[group] = setInterval(() => {
+          setSupersetTimers(prev => ({
+            ...prev,
+            [group]: (prev[group] || 0) + 1
+          }));
+        }, 1000);
+      }
+    });
+    
+    return () => {
+      Object.values(intervals).forEach(interval => clearInterval(interval));
+    };
+  }, [activeSupersets]);
+
+  // Supersatz Rest Timer
+  useEffect(() => {
+    const intervals: { [key: string]: NodeJS.Timeout } = {};
+    
+    Object.entries(supersetRestTimers).forEach(([group, time]) => {
+      if (time > 0) {
+        intervals[group] = setInterval(() => {
+          setSupersetRestTimers(prev => ({
+            ...prev,
+            [group]: Math.max(0, prev[group] - 1)
+          }));
+        }, 1000);
+      }
+    });
+    
+    return () => {
+      Object.values(intervals).forEach(interval => clearInterval(interval));
+    };
+  }, [supersetRestTimers]);
+
+  const handleSetComplete = (exerciseId: string, setIndex: number, supersetGroup: string) => {
     const key = exerciseId;
     const current = completedSets[key] || [];
-    current[setIndex] = true;
+    
+    // Toggle the completion status
+    const wasCompleted = current[setIndex];
+    current[setIndex] = !wasCompleted;
     setCompletedSets({ ...completedSets, [key]: current });
     
-    // Start rest timer
-    const exercise = workout.exercises.find(e => e.id === exerciseId);
-    if (exercise) {
-      setRestTimer(exercise.restSeconds);
-      setIsResting(true);
+    // Only start rest timer if we're marking as complete (not uncompleting)
+    if (!wasCompleted) {
+      const exercise = workout.exercises.find(e => e.id === exerciseId);
+      if (exercise) {
+        setSupersetRestTimers(prev => ({
+          ...prev,
+          [supersetGroup]: exercise.restSeconds
+        }));
+      }
     }
   };
 
@@ -235,7 +292,10 @@ export default function WorkoutDetailPage() {
               ...ex,
               sets: ex.sets.map((set: any, idx: number) => 
                 idx === setIndex 
-                  ? { ...set, targetWeight: Math.max(0, set.targetWeight + delta) }
+                  ? { 
+                      ...set, 
+                      targetWeight: Math.max(0, Math.round((set.targetWeight + delta) * 10) / 10) // Runde auf eine Nachkommastelle
+                    }
                   : set
               )
             }
@@ -250,37 +310,98 @@ export default function WorkoutDetailPage() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const calculateWorkoutStats = () => {
+    let totalWeight = 0;
+    let totalReps = 0;
+    let totalSets = 0;
+    let completedSetsCount = 0;
+    let exercises = 0;
+    const personalRecords = Math.random() > 0.7 ? Math.floor(Math.random() * 3) + 1 : 0; // Beispielhafte PR-Berechnung
+
+    workoutData.exercises.forEach((exercise) => {
+      const exerciseCompleted = completedSets[exercise.id] || [];
+      exercises++;
+      
+      exercise.sets.forEach((set, index) => {
+        totalSets++;
+        
+        if (exerciseCompleted[index]) {
+          completedSetsCount++;
+          let reps = 0;
+          
+          if (typeof set.targetReps === 'string') {
+            // Handle "5 p S" format
+            const match = set.targetReps.match(/\d+/);
+            reps = match ? parseInt(match[0]) * 2 : 0; // *2 für beide Seiten
+          } else {
+            reps = set.targetReps;
+          }
+          
+          const weight = workoutData.exercises.find(e => e.id === exercise.id)?.sets[index]?.targetWeight || set.targetWeight;
+          totalReps += reps;
+          totalWeight += weight * reps;
+        }
+      });
+    });
+
+    const duration = workoutStartTime ? Math.floor((new Date().getTime() - workoutStartTime.getTime()) / 1000) : sessionTimer;
+    const completionRate = Math.round((completedSetsCount / totalSets) * 100);
+
+    return {
+      totalWeight: Math.round(totalWeight),
+      totalReps,
+      totalSets: completedSetsCount,
+      duration,
+      exercises,
+      personalRecords,
+      completionRate
+    };
+  };
+
+  const handleTrainingEnd = () => {
+    const stats = calculateWorkoutStats();
+    if (stats.totalSets > 0) {
+      setShowSummaryModal(true);
+    }
+    setIsActive(false);
+  };
+
+  const handleTrainingStart = () => {
+    setIsActive(true);
+    setWorkoutStartTime(new Date());
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link 
             href={`/dashboard/training-plans/client/${params.id}`}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
-            <ArrowLeftIcon className="h-5 w-5 text-gray-600" />
+            <ArrowLeftIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
           </Link>
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">{workout.name}</h1>
-            <p className="text-sm text-gray-500">{workout.date} • {workout.description}</p>
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{workout.name}</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{workout.date} • {workout.description}</p>
           </div>
         </div>
         <div className="flex items-center space-x-3">
           <div className="flex items-center space-x-4">
             {isResting && (
-              <div className="flex items-center space-x-2 text-sm bg-amber-100 text-amber-800 px-3 py-1 rounded-lg">
+              <div className="flex items-center space-x-2 text-sm bg-amber-100 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200 px-3 py-1 rounded-lg">
                 <ClockIcon className="h-5 w-5" />
                 <span>Pause: {formatTime(restTimer)}</span>
               </div>
             )}
-            <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
               <ClockIcon className="h-5 w-5" />
               <span>{isActive ? formatTime(sessionTimer) : `~${workout.estimatedDuration} Min`}</span>
             </div>
           </div>
           {!isActive ? (
             <button 
-              onClick={() => setIsActive(true)}
+              onClick={handleTrainingStart}
               className="btn-primary"
             >
               <PlayIcon className="mr-2 h-5 w-5" />
@@ -288,7 +409,7 @@ export default function WorkoutDetailPage() {
             </button>
           ) : (
             <button 
-              onClick={() => setIsActive(false)}
+              onClick={handleTrainingEnd}
               className="btn-danger"
             >
               <StopIcon className="mr-2 h-5 w-5" />
@@ -304,17 +425,64 @@ export default function WorkoutDetailPage() {
             const isSuperset = !group.startsWith('single_');
             
             return (
-              <div key={group} className="card">
+              <div key={group} id={`group-${group}`} className="card dark:bg-gray-800 dark:border-gray-700">
                 <div className="card-body">
                   {isSuperset && (
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Supersatz {group.replace(/[0-9]/g, '')}
-                      </h3>
-                      <span className="text-sm text-gray-500">
-                        {exercises.length} Übungen • Pause: {exercises[0].restSeconds}s
-                      </span>
-                    </div>
+                    <>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-4">
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                            Supersatz {group.replace(/[0-9]/g, '')}
+                          </h3>
+                          {supersetRestTimers[group] > 0 && (
+                            <div className="flex items-center gap-2 text-sm bg-amber-100 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200 px-3 py-1 rounded-lg">
+                              <ClockIcon className="h-4 w-4" />
+                              <span>Pause: {formatTime(supersetRestTimers[group])}</span>
+                            </div>
+                          )}
+                          {activeSupersets[group] && (
+                            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                              <ClockIcon className="h-4 w-4" />
+                              <span>{formatTime(supersetTimers[group] || 0)}</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm text-gray-500 dark:text-gray-400">
+                            {exercises.length} Übungen • Pause: {exercises[0].restSeconds}s
+                          </span>
+                          {!activeSupersets[group] ? (
+                            <button
+                              onClick={() => setActiveSupersets(prev => ({ ...prev, [group]: true }))}
+                              className="btn-primary btn-sm"
+                            >
+                              <PlayIcon className="mr-1 h-4 w-4" />
+                              Starten
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => setActiveSupersets(prev => ({ ...prev, [group]: false }))}
+                              className="btn-danger btn-sm"
+                            >
+                              <StopIcon className="mr-1 h-4 w-4" />
+                              Stoppen
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Notizen für Supersatz {group.replace(/[0-9]/g, '')}
+                        </label>
+                        <textarea
+                          value={supersetNotes[group] || ''}
+                          onChange={(e) => setSupersetNotes(prev => ({ ...prev, [group]: e.target.value }))}
+                          placeholder="Notizen zum Supersatz hinzufügen..."
+                          className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-lg resize-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                          rows={2}
+                        />
+                      </div>
+                    </>
                   )}
                   
                   <div className={`space-y-${isSuperset ? '6' : '0'}`}>
@@ -323,14 +491,49 @@ export default function WorkoutDetailPage() {
                       const setsCompleted = completedSets[exerciseKey] || [];
                       
                       return (
-                        <div key={exercise.id} className={isSuperset ? 'border-l-4 border-primary-200 pl-4' : ''}>
+                        <div key={exercise.id} className={isSuperset ? 'border-l-4 border-primary-200 dark:border-primary-700 pl-4' : ''}>
                           <div className="mb-4">
-                            <h4 className="font-medium text-gray-900">
-                              {exercise.supersetGroup && `${exercise.supersetGroup}: `}
-                              {exercise.exercise?.name}
-                            </h4>
+                            <div className="flex items-center justify-between">
+                              <h4 className="font-medium text-gray-900 dark:text-gray-100">
+                                {exercise.supersetGroup && `${exercise.supersetGroup}: `}
+                                {exercise.exercise?.name}
+                              </h4>
+                              {!isSuperset && (
+                                <div className="flex items-center gap-3">
+                                  {supersetRestTimers[group] > 0 && (
+                                    <div className="flex items-center gap-2 text-sm bg-amber-100 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200 px-3 py-1 rounded-lg">
+                                      <ClockIcon className="h-4 w-4" />
+                                      <span>Pause: {formatTime(supersetRestTimers[group])}</span>
+                                    </div>
+                                  )}
+                                  {activeSupersets[group] && (
+                                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                      <ClockIcon className="h-4 w-4" />
+                                      <span>{formatTime(supersetTimers[group] || 0)}</span>
+                                    </div>
+                                  )}
+                                  {!activeSupersets[group] ? (
+                                    <button
+                                      onClick={() => setActiveSupersets(prev => ({ ...prev, [group]: true }))}
+                                      className="btn-primary btn-sm"
+                                    >
+                                      <PlayIcon className="mr-1 h-4 w-4" />
+                                      Starten
+                                    </button>
+                                  ) : (
+                                    <button
+                                      onClick={() => setActiveSupersets(prev => ({ ...prev, [group]: false }))}
+                                      className="btn-danger btn-sm"
+                                    >
+                                      <StopIcon className="mr-1 h-4 w-4" />
+                                      Stoppen
+                                    </button>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                             
-                            <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-gray-500">
+                            <div className="flex flex-wrap items-center gap-3 mt-1 text-sm text-gray-500 dark:text-gray-400">
                               <span>{exercise.exercise?.equipment}</span>
                               <span>•</span>
                               <span>{exercise.exercise?.muscleGroups.join(', ')}</span>
@@ -348,7 +551,7 @@ export default function WorkoutDetailPage() {
                             {exercise.exercise?.variations && (
                               <div className="mt-2">
                                 {exercise.exercise.variations.map(v => (
-                                  <span key={v} className="inline-block px-2 py-0.5 text-xs bg-primary-100 text-primary-700 rounded mr-1">
+                                  <span key={v} className="inline-block px-2 py-0.5 text-xs bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 rounded mr-1">
                                     {v}
                                   </span>
                                 ))}
@@ -356,7 +559,7 @@ export default function WorkoutDetailPage() {
                             )}
                             
                             {exercise.notes && (
-                              <div className="mt-2 p-2 bg-amber-50 rounded text-sm text-amber-800">
+                              <div className="mt-2 p-2 bg-amber-50 dark:bg-amber-900/20 rounded text-sm text-amber-800 dark:text-amber-200">
                                 <InformationCircleIcon className="h-4 w-4 inline mr-1" />
                                 {exercise.notes}
                               </div>
@@ -369,49 +572,110 @@ export default function WorkoutDetailPage() {
                                 currentPhase={currentTempoPhase}
                               />
                             )}
+                            
+                            {/* Spread-Anzeige */}
+                            {exercise.sets.length > 1 && (() => {
+                              const firstSetWeight = workoutData.exercises.find(e => e.id === exercise.id)?.sets[0]?.targetWeight || exercise.sets[0].targetWeight;
+                              const lastSetWeight = workoutData.exercises.find(e => e.id === exercise.id)?.sets[exercise.sets.length - 1]?.targetWeight || exercise.sets[exercise.sets.length - 1].targetWeight;
+                              const spread = lastSetWeight - firstSetWeight;
+                              
+                              if (spread !== 0) {
+                                return (
+                                  <div className="mt-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                                    <div className="flex items-center justify-between text-sm">
+                                      <span className="text-blue-700 dark:text-blue-300 font-medium">
+                                        Gewichtsspread:
+                                      </span>
+                                      <span className={`font-semibold ${spread > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                                        {firstSetWeight} kg → {lastSetWeight} kg ({spread > 0 ? '+' : ''}{spread} kg)
+                                      </span>
+                                    </div>
+                                  </div>
+                                );
+                              }
+                              return null;
+                            })()}
                           </div>
                           
                           <div className="space-y-2">
                             {exercise.sets.map((set, setIndex) => (
-                              <div key={setIndex} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                              <div key={setIndex} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                                 <div className="flex items-center space-x-4">
-                                  <span className="text-sm font-medium text-gray-700">
+                                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Satz {set.setNumber}
                                   </span>
-                                  <span className="text-sm text-gray-600">
+                                  <span className="text-sm text-gray-600 dark:text-gray-400">
                                     {set.targetReps} Wdh
                                   </span>
-                                  <div className="flex items-center">
-                                    <button
-                                      onClick={() => adjustWeight(exercise.id, setIndex, -2.5)}
-                                      className="p-1 hover:bg-gray-200 rounded"
-                                    >
-                                      <MinusIcon className="h-3 w-3" />
-                                    </button>
-                                    <span className="mx-2 text-sm font-medium">
-                                      {set.targetWeight} kg
-                                      {set.equipmentSetting && ` (${set.equipmentSetting})`}
-                                    </span>
-                                    <button
-                                      onClick={() => adjustWeight(exercise.id, setIndex, 2.5)}
-                                      className="p-1 hover:bg-gray-200 rounded"
-                                    >
-                                      <PlusIcon className="h-3 w-3" />
-                                    </button>
+                                  <div className="flex items-center gap-3">
+                                    <div className="flex items-center bg-white dark:bg-gray-600 rounded-lg border border-gray-300 dark:border-gray-500">
+                                      <button
+                                        onClick={() => adjustWeight(exercise.id, setIndex, -0.5)}
+                                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-500 rounded-l-lg transition-colors text-gray-600 dark:text-gray-300"
+                                        aria-label="Gewicht verringern"
+                                      >
+                                        <MinusIcon className="h-4 w-4" />
+                                      </button>
+                                      <span className="px-4 text-sm font-medium text-gray-900 dark:text-gray-100 min-w-[80px] text-center">
+                                        {workoutData.exercises.find(e => e.id === exercise.id)?.sets[setIndex]?.targetWeight || set.targetWeight} kg
+                                        {set.equipmentSetting && ` (${set.equipmentSetting})`}
+                                      </span>
+                                      <button
+                                        onClick={() => adjustWeight(exercise.id, setIndex, 0.5)}
+                                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-500 rounded-r-lg transition-colors text-gray-600 dark:text-gray-300"
+                                        aria-label="Gewicht erhöhen"
+                                      >
+                                        <PlusIcon className="h-4 w-4" />
+                                      </button>
+                                    </div>
+                                    {(set as any).previousWeight !== undefined && (
+                                      <div className="flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">Vorher:</span>
+                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                          {(set as any).previousWeight} kg
+                                        </span>
+                                        {(() => {
+                                          const currentWeight = workoutData.exercises.find(e => e.id === exercise.id)?.sets[setIndex]?.targetWeight || set.targetWeight;
+                                          const diff = currentWeight - (set as any).previousWeight;
+                                          if (diff > 0) {
+                                            return (
+                                              <span className="text-xs font-semibold text-green-600 dark:text-green-400">
+                                                ↑ +{diff}
+                                              </span>
+                                            );
+                                          } else if (diff < 0) {
+                                            return (
+                                              <span className="text-xs font-semibold text-red-600 dark:text-red-400">
+                                                ↓ {diff}
+                                              </span>
+                                            );
+                                          }
+                                          return (
+                                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                                              =
+                                            </span>
+                                          );
+                                        })()}
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                                 <button
-                                  onClick={() => handleSetComplete(exercise.id, setIndex)}
+                                  onClick={() => handleSetComplete(exercise.id, setIndex, group)}
                                   className={`
-                                    px-3 py-1 rounded-lg transition-colors
+                                    px-3 py-1 rounded-lg transition-all duration-200
                                     ${setsCompleted[setIndex]
-                                      ? 'bg-success text-white'
-                                      : 'bg-white border border-gray-300 hover:bg-gray-100'
+                                      ? 'bg-success hover:bg-green-600 dark:hover:bg-green-700 text-white flex items-center gap-1'
+                                      : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100'
                                     }
                                   `}
+                                  title={setsCompleted[setIndex] ? 'Klicken zum Rückgängig machen' : 'Satz als fertig markieren'}
                                 >
                                   {setsCompleted[setIndex] ? (
-                                    <CheckIcon className="h-5 w-5" />
+                                    <>
+                                      <CheckIcon className="h-5 w-5" />
+                                      <span className="text-xs">Fertig</span>
+                                    </>
                                   ) : (
                                     'Fertig'
                                   )}
@@ -423,6 +687,42 @@ export default function WorkoutDetailPage() {
                       );
                     })}
                   </div>
+                  
+                  {!isSuperset && (
+                    <>
+                      <div className="mt-4">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Notizen
+                        </label>
+                        <textarea
+                          value={supersetNotes[group] || ''}
+                          onChange={(e) => setSupersetNotes(prev => ({ ...prev, [group]: e.target.value }))}
+                          placeholder="Notizen zur Übung hinzufügen..."
+                          className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-lg resize-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                          rows={2}
+                        />
+                      </div>
+                      
+                      {/* Weiter Button nur anzeigen wenn es nicht die letzte Übungsgruppe ist */}
+                      {index < supersetGroups.length - 1 && (
+                        <div className="mt-4 flex justify-end">
+                          <button
+                            onClick={() => {
+                              // Scroll zur nächsten Übungsgruppe
+                              const nextGroupElement = document.getElementById(`group-${supersetGroups[index + 1][0]}`);
+                              if (nextGroupElement) {
+                                nextGroupElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                              }
+                            }}
+                            className="btn-primary"
+                          >
+                            Weiter
+                            <ArrowRightIcon className="ml-2 h-5 w-5" />
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             );
@@ -430,20 +730,20 @@ export default function WorkoutDetailPage() {
         </div>
 
         <div className="space-y-4">
-          <div className="card sticky top-4">
+          <div className="card sticky top-4 dark:bg-gray-800 dark:border-gray-700">
             <div className="card-body">
-              <h3 className="text-base font-semibold text-gray-900 mb-4">Trainingsfortschritt</h3>
+              <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Trainingsfortschritt</h3>
               
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">Gesamtfortschritt</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-gray-600 dark:text-gray-400">Gesamtfortschritt</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">
                       {Object.values(completedSets).flat().filter(Boolean).length} / 
                       {workout.exercises.reduce((sum, ex) => sum + ex.sets.length, 0)} Sätze
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div 
                       className="bg-primary-600 h-2 rounded-full transition-all duration-300"
                       style={{ 
@@ -455,7 +755,7 @@ export default function WorkoutDetailPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="text-sm font-medium text-gray-900">Übungsübersicht</h4>
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">Übungsübersicht</h4>
                   {Array.from(supersetGroups.entries()).map(([group, exercises]) => {
                     const isSuperset = !group.startsWith('single_');
                     
@@ -479,11 +779,11 @@ export default function WorkoutDetailPage() {
                                 ${isSuperset ? 'ml-4' : ''}
                               `}
                             >
-                              <span className="text-sm">
+                              <span className="text-sm text-gray-900 dark:text-gray-100">
                                 {exercise.supersetGroup && `${exercise.supersetGroup}: `}
                                 {exercise.exercise?.name}
                               </span>
-                              <span className="text-gray-500">
+                              <span className="text-gray-500 dark:text-gray-400">
                                 {completedCount}/{exercise.sets.length}
                               </span>
                             </div>
@@ -495,7 +795,7 @@ export default function WorkoutDetailPage() {
                 </div>
 
                 {isActive && (
-                  <div className="pt-4 border-t space-y-3">
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
                     {isResting && (
                       <button 
                         onClick={() => setIsResting(false)}
@@ -505,7 +805,14 @@ export default function WorkoutDetailPage() {
                       </button>
                     )}
                     <button 
-                      onClick={() => setIsActive(false)}
+                      onClick={() => setShowSummaryModal(true)}
+                      className="w-full btn-primary"
+                    >
+                      <CheckIcon className="mr-2 h-5 w-5" />
+                      Zusammenfassung
+                    </button>
+                    <button 
+                      onClick={handleTrainingEnd}
                       className="w-full btn-danger"
                     >
                       <StopIcon className="mr-2 h-5 w-5" />
@@ -518,6 +825,13 @@ export default function WorkoutDetailPage() {
           </div>
         </div>
       </div>
+
+      <WorkoutSummaryModal
+        isOpen={showSummaryModal}
+        onClose={() => setShowSummaryModal(false)}
+        stats={calculateWorkoutStats()}
+        clientName="Max Mustermann"
+      />
     </div>
   );
 }
