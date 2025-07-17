@@ -12,7 +12,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <MobileMenuProvider>
-      <div className="flex h-screen overflow-hidden bg-gray-50">
+      <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
         {/* Mobile sidebar */}
         <MobileSidebar />
         

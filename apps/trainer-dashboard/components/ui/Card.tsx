@@ -15,9 +15,9 @@ export function Card({
   ...props 
 }: CardProps) {
   const variants = {
-    default: 'bg-white border border-gray-200',
-    bordered: 'bg-white border-2 border-gray-300',
-    elevated: 'bg-white shadow-lg border-0',
+    default: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
+    bordered: 'bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600',
+    elevated: 'bg-white dark:bg-gray-800 shadow-lg dark:shadow-gray-900/50 border-0',
   };
 
   const paddings = {
@@ -60,7 +60,7 @@ export function CardTitle({
   ...props 
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h3 className={cn('text-lg font-semibold text-gray-900', className)} {...props}>
+    <h3 className={cn('text-lg font-semibold text-gray-900 dark:text-gray-100', className)} {...props}>
       {children}
     </h3>
   );

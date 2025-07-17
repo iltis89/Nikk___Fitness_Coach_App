@@ -10,7 +10,7 @@ import {
   CheckIcon,
   CheckCircleIcon
 } from '@heroicons/react/24/outline';
-import { PackageType } from '@nv/shared/src/types/package';
+import { PackageType } from '@/types/package';
 
 const conversations = [
   {

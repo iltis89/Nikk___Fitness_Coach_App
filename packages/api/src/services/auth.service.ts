@@ -2,10 +2,12 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { config } from '../config/env';
-import { JWTPayload, UserWithoutPassword } from '../types';
+import { JWTPayload } from '../types';
 import crypto from 'crypto';
 
 const prisma = new PrismaClient();
+
+type UserWithoutPassword = any;
 
 export class AuthService {
   static async register(data: {

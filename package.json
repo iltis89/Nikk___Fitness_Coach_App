@@ -8,6 +8,8 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
+    "dev:dashboard": "npm run dev --workspace=trainer-dashboard",
+    "dev:api": "npm run dev --workspace=@nv/api",
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint",

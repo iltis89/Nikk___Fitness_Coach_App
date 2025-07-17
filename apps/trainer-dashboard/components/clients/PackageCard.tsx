@@ -7,7 +7,7 @@ import {
   ChartBarIcon,
   ArrowPathIcon,
 } from '@heroicons/react/24/outline';
-import { PACKAGE_COLORS, PACKAGE_LABELS, PackageType } from '@nv/shared/src/types/package';
+import { PACKAGE_COLORS, PACKAGE_LABELS, PackageType } from '@/types/package';
 
 interface PackageCardProps {
   package: {
@@ -54,7 +54,7 @@ export default function PackageCard({ package: pkg }: PackageCardProps) {
 
   return (
     <div
-      className={`bg-white rounded-xl border-2 p-6 hover:shadow-lg transition-all duration-200 cursor-pointer relative overflow-hidden ${
+      className={`bg-white dark:bg-[rgb(20,25,45)] rounded-xl border-2 p-6 hover:shadow-lg dark:hover:shadow-gray-900/30 transition-all duration-200 cursor-pointer relative overflow-hidden ${
         PACKAGE_COLORS[pkg.type].border
       }`}
       onClick={() => router.push(`/clients/${pkg.clientId}`)}
@@ -63,13 +63,13 @@ export default function PackageCard({ package: pkg }: PackageCardProps) {
       {(isExpiringSoon || isHighUsage) && (
         <div className="absolute top-4 right-4 flex gap-2">
           {isExpiringSoon && (
-            <div className="bg-warning-100 text-warning-700 px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+            <div className="bg-warning-100 dark:bg-warning-500/20 text-warning-700 dark:text-warning-500 px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
               <ExclamationTriangleIcon className="h-3 w-3" />
               Läuft ab
             </div>
           )}
           {isHighUsage && (
-            <div className="bg-error-100 text-error-700 px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+            <div className="bg-error-100 dark:bg-error-400/20 text-error-700 dark:text-error-400 px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
               <ChartBarIcon className="h-3 w-3" />
               Fast aufgebraucht
             </div>
@@ -84,19 +84,19 @@ export default function PackageCard({ package: pkg }: PackageCardProps) {
         } ${PACKAGE_COLORS[pkg.type].text} mb-2`}>
           {PACKAGE_LABELS[pkg.type]}
         </div>
-        <h3 className="text-lg font-bold text-gray-900">{pkg.clientName}</h3>
-        <p className="text-sm text-gray-600">{pkg.name}</p>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-50">{pkg.clientName}</h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400">{pkg.name}</p>
       </div>
 
       {/* Usage Bar */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-600">Nutzung</span>
-          <span className="text-sm font-medium text-gray-900">
+          <span className="text-sm text-gray-600 dark:text-gray-400">Nutzung</span>
+          <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
             {pkg.usedSessions} / {pkg.totalSessions} Sessions
           </span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-3">
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
           <div
             className={`h-3 rounded-full transition-all duration-300 ${
               usagePercentage >= 80
@@ -110,37 +110,37 @@ export default function PackageCard({ package: pkg }: PackageCardProps) {
             <span className="sr-only">{usagePercentage}% genutzt</span>
           </div>
         </div>
-        <p className="text-xs text-gray-500 mt-1">{usagePercentage}% genutzt</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{usagePercentage}% genutzt</p>
       </div>
 
       {/* Details */}
       <div className="flex flex-col gap-2 text-sm">
         <div className="flex items-center justify-between">
-          <span className="flex items-center gap-2 text-gray-600">
+          <span className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
             <CalendarDaysIcon className="h-4 w-4" />
             Laufzeit
           </span>
-          <span className="text-gray-900">
+          <span className="text-gray-900 dark:text-gray-50">
             {formatDate(pkg.startDate)} - {formatDate(pkg.endDate)}
           </span>
         </div>
         
         {pkg.frequency && (
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-gray-600">
+            <span className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
               <ArrowPathIcon className="h-4 w-4" />
               Häufigkeit
             </span>
-            <span className="text-gray-900">{formatFrequency()}</span>
+            <span className="text-gray-900 dark:text-gray-50">{formatFrequency()}</span>
           </div>
         )}
         
         <div className="flex items-center justify-between">
-          <span className="flex items-center gap-2 text-gray-600">
+          <span className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
             <ClockIcon className="h-4 w-4" />
             Verbleibend
           </span>
-          <span className={`font-medium ${daysUntilExpiry <= 7 ? 'text-error-600' : 'text-gray-900'}`}>
+          <span className={`font-medium ${daysUntilExpiry <= 7 ? 'text-error-600 dark:text-error-400' : 'text-gray-900 dark:text-gray-50'}`}>
             {daysUntilExpiry} Tage
           </span>
         </div>
@@ -148,9 +148,9 @@ export default function PackageCard({ package: pkg }: PackageCardProps) {
 
       {/* Next Session */}
       {pkg.nextSession && (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <p className="text-xs text-gray-500">Nächster Termin</p>
-          <p className="text-sm font-medium text-gray-900">
+        <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+          <p className="text-xs text-gray-500 dark:text-gray-400">Nächster Termin</p>
+          <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
             {new Intl.DateTimeFormat('de-DE', {
               weekday: 'long',
               day: '2-digit',
@@ -169,7 +169,7 @@ export default function PackageCard({ package: pkg }: PackageCardProps) {
             e.stopPropagation();
             // TODO: Implement extend package
           }}
-          className="flex-1 text-sm font-medium text-primary-600 hover:text-primary-700 py-2 px-3 border border-primary-200 rounded-lg hover:bg-primary-50 transition-colors"
+          className="flex-1 text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 py-2 px-3 border border-primary-200 dark:border-primary-800 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors"
         >
           Verlängern
         </button>
@@ -178,7 +178,7 @@ export default function PackageCard({ package: pkg }: PackageCardProps) {
             e.stopPropagation();
             // TODO: Implement view details
           }}
-          className="flex-1 text-sm font-medium text-gray-700 hover:text-gray-900 py-2 px-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="flex-1 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50 py-2 px-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           Details
         </button>

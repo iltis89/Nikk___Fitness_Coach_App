@@ -28,21 +28,21 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     switch (variant) {
       case 'danger':
         return {
-          icon: 'text-error-600',
-          bg: 'bg-error-50',
-          button: 'bg-error-600 hover:bg-error-700 focus:ring-error-500',
+          icon: 'text-error-600 dark:text-error-400',
+          bg: 'bg-error-50 dark:bg-error-900/20',
+          button: 'bg-error-600 hover:bg-error-700 dark:bg-error-600 dark:hover:bg-error-700 focus:ring-error-500',
         };
       case 'warning':
         return {
-          icon: 'text-warning-600',
-          bg: 'bg-warning-50',
-          button: 'bg-warning-600 hover:bg-warning-700 focus:ring-warning-500',
+          icon: 'text-warning-600 dark:text-warning-400',
+          bg: 'bg-warning-50 dark:bg-warning-900/20',
+          button: 'bg-warning-600 hover:bg-warning-700 dark:bg-warning-600 dark:hover:bg-warning-700 focus:ring-warning-500',
         };
       case 'info':
         return {
-          icon: 'text-info-600',
-          bg: 'bg-info-50',
-          button: 'bg-info-600 hover:bg-info-700 focus:ring-info-500',
+          icon: 'text-info-600 dark:text-info-400',
+          bg: 'bg-info-50 dark:bg-info-900/20',
+          button: 'bg-info-600 hover:bg-info-700 dark:bg-info-600 dark:hover:bg-info-700 focus:ring-info-500',
         };
     }
   };
@@ -57,7 +57,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         aria-hidden="true"
       />
       <div 
-        className="relative bg-white rounded-xl shadow-2xl max-w-md w-full animate-slide-up"
+        className="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full animate-slide-up"
         role="dialog"
         aria-modal="true"
         aria-labelledby="dialog-title"
@@ -68,10 +68,10 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
               <ExclamationTriangleIcon className={`h-6 w-6 ${styles.icon}`} aria-hidden="true" />
             </div>
             <div className="flex-1">
-              <h3 id="dialog-title" className="text-lg font-bold text-gray-900 mb-2">
+              <h3 id="dialog-title" className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {title}
               </h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 {message}
               </p>
             </div>
@@ -81,7 +81,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         <div className="px-6 pb-6 flex items-center justify-end gap-3">
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 focus:ring-gray-500 transition-colors"
           >
             {cancelText}
           </button>

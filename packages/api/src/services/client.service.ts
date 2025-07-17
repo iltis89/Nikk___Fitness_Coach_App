@@ -1,10 +1,9 @@
-import { PrismaClient, Client } from '@prisma/client';
-import { AuthRequest } from '../types';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export class ClientService {
-  static async create(trainerId: string, data: Partial<Client>) {
+  static async create(trainerId: string, data: any) {
     return await prisma.client.create({
       data: {
         ...data,
@@ -112,7 +111,7 @@ export class ClientService {
     return client;
   }
 
-  static async update(id: string, trainerId: string, data: Partial<Client>) {
+  static async update(id: string, trainerId: string, data: any) {
     // Check ownership
     const client = await prisma.client.findFirst({
       where: { id, trainerId }

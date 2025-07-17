@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Response, NextFunction } from 'express';
 import { body, validationResult } from 'express-validator';
 import { AuthService } from '../services/auth.service';
 import { authenticate } from '../middlewares/auth';
@@ -7,7 +7,7 @@ import { AuthRequest } from '../types';
 const router = Router();
 
 // Validation middleware
-const handleValidationErrors = (req: any, res: any, next: any) => {
+const handleValidationErrors = (req: AuthRequest, res: Response, next: NextFunction): any => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -29,7 +29,7 @@ router.post('/register', [
   body('firstName').notEmpty().trim(),
   body('lastName').notEmpty().trim(),
   handleValidationErrors
-], async (req, res) => {
+], async (req: AuthRequest, res: Response) => {
   try {
     const result = await AuthService.register(req.body);
     
@@ -48,12 +48,12 @@ router.post('/register', [
         accessToken: result.accessToken
       }
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(400).json({
       success: false,
       error: {
         code: 'REGISTRATION_FAILED',
-        message: error.message
+        message: error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten'
       }
     });
   }
@@ -64,7 +64,7 @@ router.post('/login', [
   body('email').isEmail().normalizeEmail(),
   body('password').notEmpty(),
   handleValidationErrors
-], async (req, res) => {
+], async (req: AuthRequest, res: Response) => {
   try {
     const { email, password } = req.body;
     const result = await AuthService.login(email, password);
@@ -84,19 +84,19 @@ router.post('/login', [
         accessToken: result.accessToken
       }
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(401).json({
       success: false,
       error: {
         code: 'LOGIN_FAILED',
-        message: error.message
+        message: error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten'
       }
     });
   }
 });
 
 // Refresh token
-router.post('/refresh', async (req, res) => {
+router.post('/refresh', async (req: AuthRequest, res: Response) => {
   try {
     const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
     
@@ -126,19 +126,19 @@ router.post('/refresh', async (req, res) => {
         accessToken: result.accessToken
       }
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(401).json({
       success: false,
       error: {
         code: 'REFRESH_FAILED',
-        message: error.message
+        message: error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten'
       }
     });
   }
 });
 
 // Logout
-router.post('/logout', authenticate, async (req: AuthRequest, res) => {
+router.post('/logout', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     await AuthService.logout(req.user!.userId, refreshToken);
@@ -152,12 +152,12 @@ router.post('/logout', authenticate, async (req: AuthRequest, res) => {
         message: 'Erfolgreich abgemeldet'
       }
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({
       success: false,
       error: {
         code: 'LOGOUT_FAILED',
-        message: error.message
+        message: error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten'
       }
     });
   }

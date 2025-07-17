@@ -1,18 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
-import { Prisma } from '@prisma/client';
 
 export interface AppError extends Error {
   statusCode?: number;
   code?: string;
   details?: any;
+  meta?: any;
 }
 
 export const errorHandler = (
   err: AppError,
   req: Request,
   res: Response,
-  next: NextFunction
-) => {
+  _next: NextFunction
+): any => {
   // Log error for debugging
   console.error('Error:', {
     message: err.message,
@@ -23,7 +23,7 @@ export const errorHandler = (
   });
 
   // Prisma errors
-  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+  if (err.constructor.name === 'PrismaClientKnownRequestError') {
     if (err.code === 'P2002') {
       return res.status(409).json({
         success: false,

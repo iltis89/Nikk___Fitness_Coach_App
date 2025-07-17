@@ -31,7 +31,7 @@ export function Skeleton({
   return (
     <div
       className={cn(
-        'bg-gray-200',
+        'bg-gray-200 dark:bg-gray-700',
         variants[variant],
         animations[animation],
         className
@@ -47,7 +47,7 @@ export function Skeleton({
 
 export function SkeletonCard() {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
       <Skeleton variant="text" height="1.5rem" width="60%" className="mb-4" />
       <div className="space-y-3">
         <Skeleton variant="text" height="1rem" />
@@ -60,7 +60,7 @@ export function SkeletonCard() {
 
 export function SkeletonStat() {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <Skeleton variant="text" height="0.875rem" width="120px" className="mb-2" />

@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import authRoutes from './auth';
 import clientRoutes from './clients';
 import measurementRoutes from './measurements';
@@ -14,7 +14,7 @@ router.use('/clients', authenticate, clientRoutes);
 router.use('/measurements', authenticate, measurementRoutes);
 
 // API info
-router.get('/', (req, res) => {
+router.get('/', (_req: Request, res: Response) => {
   res.json({
     success: true,
     data: {

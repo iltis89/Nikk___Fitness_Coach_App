@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Response, NextFunction } from 'express';
 import { body, param, query, validationResult } from 'express-validator';
 import { ClientService } from '../services/client.service';
 import { AuthRequest } from '../types';
@@ -6,7 +6,7 @@ import { AuthRequest } from '../types';
 const router = Router();
 
 // Validation middleware
-const handleValidationErrors = (req: any, res: any, next: any) => {
+const handleValidationErrors = (req: AuthRequest, res: Response, next: NextFunction): any => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -28,7 +28,7 @@ router.get('/', [
   query('search').optional().isString(),
   query('isActive').optional().isBoolean(),
   handleValidationErrors
-], async (req: AuthRequest, res) => {
+], async (req: AuthRequest, res: Response) => {
   try {
     const result = await ClientService.findAll(req.user!.userId, {
       page: req.query.page ? parseInt(req.query.page as string) : undefined,
@@ -42,19 +42,19 @@ router.get('/', [
       data: result.clients,
       meta: result.meta
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({
       success: false,
       error: {
         code: 'FETCH_FAILED',
-        message: error.message
+        message: error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten'
       }
     });
   }
 });
 
 // Get client stats
-router.get('/stats', async (req: AuthRequest, res) => {
+router.get('/stats', async (req: AuthRequest, res: Response) => {
   try {
     const stats = await ClientService.getStats(req.user!.userId);
     
@@ -62,12 +62,12 @@ router.get('/stats', async (req: AuthRequest, res) => {
       success: true,
       data: stats
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({
       success: false,
       error: {
         code: 'STATS_FAILED',
-        message: error.message
+        message: error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten'
       }
     });
   }
@@ -77,7 +77,7 @@ router.get('/stats', async (req: AuthRequest, res) => {
 router.get('/:id', [
   param('id').isString(),
   handleValidationErrors
-], async (req: AuthRequest, res) => {
+], async (req: AuthRequest, res: Response) => {
   try {
     const client = await ClientService.findById(req.params.id, req.user!.userId);
     
@@ -85,12 +85,12 @@ router.get('/:id', [
       success: true,
       data: client
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(404).json({
       success: false,
       error: {
         code: 'NOT_FOUND',
-        message: error.message
+        message: error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten'
       }
     });
   }
@@ -111,7 +111,7 @@ router.post('/', [
   body('fitnessGoals').optional().isArray(),
   body('medicalConditions').optional().isArray(),
   handleValidationErrors
-], async (req: AuthRequest, res) => {
+], async (req: AuthRequest, res: Response) => {
   try {
     const client = await ClientService.create(req.user!.userId, req.body);
     
@@ -119,12 +119,12 @@ router.post('/', [
       success: true,
       data: client
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(400).json({
       success: false,
       error: {
         code: 'CREATE_FAILED',
-        message: error.message
+        message: error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten'
       }
     });
   }
@@ -148,7 +148,7 @@ router.put('/:id', [
   body('isActive').optional().isBoolean(),
   body('notes').optional().isString(),
   handleValidationErrors
-], async (req: AuthRequest, res) => {
+], async (req: AuthRequest, res: Response) => {
   try {
     const client = await ClientService.update(
       req.params.id,
@@ -160,12 +160,12 @@ router.put('/:id', [
       success: true,
       data: client
     });
-  } catch (error: any) {
-    res.status(error.message === 'Kunde nicht gefunden' ? 404 : 400).json({
+  } catch (error) {
+    res.status(error instanceof Error && error.message === 'Kunde nicht gefunden' ? 404 : 400).json({
       success: false,
       error: {
         code: 'UPDATE_FAILED',
-        message: error.message
+        message: error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten'
       }
     });
   }
@@ -175,7 +175,7 @@ router.put('/:id', [
 router.delete('/:id', [
   param('id').isString(),
   handleValidationErrors
-], async (req: AuthRequest, res) => {
+], async (req: AuthRequest, res: Response) => {
   try {
     await ClientService.delete(req.params.id, req.user!.userId);
     
@@ -185,12 +185,12 @@ router.delete('/:id', [
         message: 'Kunde erfolgreich deaktiviert'
       }
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(404).json({
       success: false,
       error: {
         code: 'DELETE_FAILED',
-        message: error.message
+        message: error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten'
       }
     });
   }

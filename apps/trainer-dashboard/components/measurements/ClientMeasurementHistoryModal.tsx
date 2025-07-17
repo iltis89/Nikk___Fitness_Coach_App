@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { XMarkIcon, ArrowTrendingUpIcon, ArrowTrendingDownIcon, MinusIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { ClientAvatar } from '@/components/ui';
-import { PackageType } from '@nv/shared/src/types/package';
+import { PackageType } from '@/types/package';
 import { formatDate } from '@/utils/dateFormatters';
 
 interface MeasurementHistory {

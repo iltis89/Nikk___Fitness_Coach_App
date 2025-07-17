@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,6 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Nikk's Dark Mode Palette - Fokus auf messbare Erfolge
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -22,44 +24,47 @@ const config: Config = {
           900: '#0c4a6e',
           950: '#082f49',
         },
+        // Refined grays with off-white
         gray: {
-          50: '#f9fafb',
-          100: '#f3f4f6',
-          200: '#e5e7eb',
-          300: '#d1d5db',
-          400: '#9ca3af',
+          50: '#f4f4f6',  // Off-white instead of pure white
+          100: '#e8e8ea', // Softer light gray
+          200: '#d1d1d6', // Light gray for text
+          300: '#b8b8be',
+          400: '#9898a3',
           500: '#6b7280',
           600: '#4b5563',
           700: '#374151',
           800: '#1f2937',
-          900: '#111827',
-          950: '#030712',
+          900: '#0a0a1e', // Dunkelblau für Dark Mode
+          950: '#050510',
         },
+        // Success - Grüntöne für "messbare Erfolge" (Nikks Philosophie)
         success: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
-          950: '#052e16',
+          50: '#eefbf3',
+          100: '#d6f5e3',
+          200: '#b0ecc9',
+          300: '#7cdea5',
+          400: '#34c759', // Nikks signature green
+          500: '#2fb351', // Slightly darker for better contrast
+          600: '#22a045',
+          700: '#1d803a',
+          800: '#1b6632',
+          900: '#17522a',
+          950: '#0a2e16',
         },
+        // Warning - Desaturated for Dark Mode
         warning: {
           50: '#fffbeb',
           100: '#fef3c7',
           200: '#fde68a',
           300: '#fcd34d',
           400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
-          950: '#451a03',
+          500: '#cca300', // Desaturated dark yellow
+          600: '#b89100',
+          700: '#967500',
+          800: '#785d00',
+          900: '#614a00',
+          950: '#3d2f00',
         },
         error: {
           50: '#fef2f2',
@@ -87,8 +92,20 @@ const config: Config = {
           900: '#1e3a8a',
           950: '#172554',
         },
-        background: '#ffffff',
-        foreground: '#111827',
+        // Background colors
+        background: {
+          DEFAULT: '#ffffff',
+          dark: '#0a0a1e', // Nikks Dark Mode primary
+        },
+        foreground: {
+          DEFAULT: '#111827',
+          dark: '#f4f4f6', // Off-white for text
+        },
+        // Accent colors for Nikk's brand
+        accent: {
+          green: 'hsl(145, 63%, 42%)', // Consistent accent green
+          'green-muted': 'hsla(145, 63%, 42%, 0.7)', // 70% opacity
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

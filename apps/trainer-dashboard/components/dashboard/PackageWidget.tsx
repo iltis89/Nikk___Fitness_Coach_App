@@ -6,7 +6,7 @@ import {
   CalendarDaysIcon,
   ChartBarIcon,
 } from '@heroicons/react/24/outline';
-import { PACKAGE_COLORS, PACKAGE_LABELS, PackageType } from '@nv/shared/src/types/package';
+import { PACKAGE_COLORS, PACKAGE_LABELS, PackageType } from '@/types/package';
 
 interface ExpiringPackage {
   id: string;

@@ -92,7 +92,7 @@ export default function DashboardGrid() {
     <div className="relative">
       {/* Control Bar */}
       <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Dashboard</h1>
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100">Dashboard</h1>
         <div className="flex items-center gap-2 self-end sm:self-auto">
           {isEditMode && (
             <>
@@ -214,6 +214,11 @@ export default function DashboardGrid() {
           height: 5px;
           border-right: 2px solid rgba(0, 0, 0, 0.4);
           border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+        }
+        
+        :global(.dark .react-grid-item > .react-resizable-handle::after) {
+          border-right-color: rgba(255, 255, 255, 0.4);
+          border-bottom-color: rgba(255, 255, 255, 0.4);
         }
         
         :global(.widget-handle) {

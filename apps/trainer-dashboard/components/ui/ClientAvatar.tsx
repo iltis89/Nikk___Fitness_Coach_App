@@ -1,6 +1,6 @@
 import React from 'react';
 import { clsx } from 'clsx';
-import { PackageType } from '@nv/shared/src/types/package';
+import { PackageType } from '@/types/package';
 
 interface ClientAvatarProps {
   name: string;
@@ -18,9 +18,9 @@ const sizeClasses = {
 };
 
 const packageColorClasses: Record<PackageType, string> = {
-  personal_training: 'bg-gradient-to-br from-blue-400 to-blue-600',
-  training_consultation: 'bg-gradient-to-br from-purple-400 to-purple-600',
-  online_coaching: 'bg-gradient-to-br from-green-400 to-green-600',
+  personal_training: 'bg-gradient-to-br from-blue-400 to-blue-600 dark:from-blue-500 dark:to-blue-700',
+  training_consultation: 'bg-gradient-to-br from-purple-400 to-purple-600 dark:from-purple-500 dark:to-purple-700',
+  online_coaching: 'bg-gradient-to-br from-green-400 to-green-600 dark:from-green-500 dark:to-green-700',
 };
 
 export function ClientAvatar({ 
@@ -37,7 +37,7 @@ export function ClientAvatar({
 
   const colorClass = packageType && packageColorClasses[packageType]
     ? packageColorClasses[packageType]
-    : 'bg-gradient-to-br from-gray-400 to-gray-600';
+    : 'bg-gradient-to-br from-gray-400 to-gray-600 dark:from-gray-500 dark:to-gray-700';
 
   return (
     <div

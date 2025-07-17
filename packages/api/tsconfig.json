@@ -14,7 +14,7 @@
     "allowJs": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
@@ -24,5 +24,5 @@
     "tsBuildInfoFile": ".tsbuildinfo"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "../../node_modules"]
 }

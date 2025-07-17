@@ -18,7 +18,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { ClientAvatar, EditableField, EditableSelect, EditableList, EditableSupplements } from '@/components/ui';
-import { PackageType } from '@nv/shared/src/types/package';
+import { PackageType } from '@/types/package';
 import { formatDate, calculateAge } from '@/utils/dateFormatters';
 
 // Mock data - TODO: Replace with API call
@@ -138,7 +138,7 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Avatar & Basic Info */}
         <div className="lg:col-span-1">
-          <div className="card">
+          <div className="card dark:bg-gray-800 dark:border-gray-700">
             <div className="card-body">
               <div className="flex flex-col items-center">
                 <div className="relative">
@@ -147,8 +147,8 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
                     packageType={clientData.packageType}
                     size="xl"
                   />
-                  <button className="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors">
-                    <CameraIcon className="h-5 w-5 text-gray-600" />
+                  <button className="absolute bottom-0 right-0 p-2 bg-white dark:bg-gray-700 rounded-full shadow-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                    <CameraIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                   </button>
                 </div>
                 <div className="mt-4 text-center">
@@ -169,7 +169,7 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
                 
                 <div className="mt-6 w-full space-y-4">
                   <div className="text-center">
-                    <p className="text-sm text-gray-500">Paket</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Paket</p>
                     {isEditMode ? (
                       <EditableSelect
                         value={clientData.packageType}
@@ -179,15 +179,15 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
                         onEditingChange={(isEditing) => handleFieldEdit('packageType', isEditing)}
                       />
                     ) : (
-                      <p className="text-sm font-semibold text-gray-900 mt-1">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mt-1">
                         {packageOptions.find(opt => opt.value === clientData.packageType)?.label}
                       </p>
                     )}
                   </div>
                   
                   <div className="text-center">
-                    <p className="text-sm text-gray-500">Aktueller Plan</p>
-                    <p className="text-sm font-semibold text-gray-900 mt-1">{clientData.currentPlan}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Aktueller Plan</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mt-1">{clientData.currentPlan}</p>
                   </div>
                 </div>
               </div>
@@ -198,13 +198,13 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
         {/* Right Column - Contact & Personal Info */}
         <div className="lg:col-span-2 space-y-6">
           {/* Contact Information */}
-          <div className="card">
+          <div className="card dark:bg-gray-800 dark:border-gray-700">
             <div className="card-body">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Kontaktinformationen</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Kontaktinformationen</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <EnvelopeIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                    <EnvelopeIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 mt-0.5" />
                     <EditableField
                       value={clientData.email}
                       onSave={(value) => handleSave('email', value)}
@@ -217,7 +217,7 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
                   </div>
                   
                   <div className="flex items-start gap-3">
-                    <PhoneIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                    <PhoneIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 mt-0.5" />
                     <EditableField
                       value={clientData.phone}
                       onSave={(value) => handleSave('phone', value)}
@@ -232,7 +232,7 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
                 
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <MapPinIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                    <MapPinIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 mt-0.5" />
                     <EditableField
                       value={clientData.address}
                       onSave={(value) => handleSave('address', value)}
@@ -244,7 +244,7 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
                   </div>
                   
                   <div className="flex items-start gap-3">
-                    <ExclamationTriangleIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                    <ExclamationTriangleIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 mt-0.5" />
                     <EditableField
                       value={clientData.emergencyContact}
                       onSave={(value) => handleSave('emergencyContact', value)}
@@ -260,12 +260,12 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
           </div>
 
           {/* Personal Information */}
-          <div className="card">
+          <div className="card dark:bg-gray-800 dark:border-gray-700">
             <div className="card-body">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Persönliche Informationen</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Persönliche Informationen</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-start gap-3">
-                  <CalendarDaysIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                  <CalendarDaysIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 mt-0.5" />
                   <div className="flex-1">
                     <EditableField
                       value={clientData.birthDate}
@@ -276,7 +276,7 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
                       onEditingChange={(isEditing) => handleFieldEdit('birthDate', isEditing)}
                     />
                     {!isEditMode && (
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         {calculateAge(clientData.birthDate)} Jahre alt
                       </p>
                     )}
@@ -290,7 +290,7 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
 
       {/* Goals, Medical, Supplements */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="card">
+        <div className="card dark:bg-gray-800 dark:border-gray-700">
           <div className="card-body">
             <EditableList
               items={clientData.goals}
@@ -316,7 +316,7 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
           </div>
         </div>
 
-        <div className="card">
+        <div className="card dark:bg-gray-800 dark:border-gray-700">
           <div className="card-body">
             <EditableSupplements
               supplements={clientData.supplements}
@@ -330,73 +330,73 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
 
       {/* Progress, Appointments, Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card">
+        <div className="card dark:bg-gray-800 dark:border-gray-700">
           <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Aktuelle Fortschritte</h3>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Aktuelle Fortschritte</h3>
             <div className="space-y-4">
-              <div className="flex justify-between items-center pb-3 border-b">
-                <span className="text-sm text-gray-600">Gewicht</span>
+              <div className="flex justify-between items-center pb-3 border-b dark:border-gray-700">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Gewicht</span>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-gray-900">{clientData.measurements.latest.weight} kg</p>
-                  <p className={`text-xs ${clientData.progress.weightChange < 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{clientData.measurements.latest.weight} kg</p>
+                  <p className={`text-xs ${clientData.progress.weightChange < 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                     {clientData.progress.weightChange > 0 ? '+' : ''}{clientData.progress.weightChange} kg
                   </p>
                 </div>
               </div>
-              <div className="flex justify-between items-center pb-3 border-b">
-                <span className="text-sm text-gray-600">Körperfett</span>
+              <div className="flex justify-between items-center pb-3 border-b dark:border-gray-700">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Körperfett</span>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-gray-900">{clientData.measurements.latest.bodyFat}%</p>
-                  <p className={`text-xs ${clientData.progress.bodyFatChange < 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{clientData.measurements.latest.bodyFat}%</p>
+                  <p className={`text-xs ${clientData.progress.bodyFatChange < 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                     {clientData.progress.bodyFatChange > 0 ? '+' : ''}{clientData.progress.bodyFatChange}%
                   </p>
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Muskelmasse</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Muskelmasse</span>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-gray-900">{clientData.measurements.latest.muscleMass} kg</p>
-                  <p className={`text-xs ${clientData.progress.muscleMassChange > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{clientData.measurements.latest.muscleMass} kg</p>
+                  <p className={`text-xs ${clientData.progress.muscleMassChange > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                     {clientData.progress.muscleMassChange > 0 ? '+' : ''}{clientData.progress.muscleMassChange} kg
                   </p>
                 </div>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t">
-              <p className="text-xs text-gray-500 text-center">
+            <div className="mt-4 pt-4 border-t dark:border-gray-700">
+              <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                 Letzte Messung: {formatDate(clientData.measurements.latest.date, 'long')}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="card">
+        <div className="card dark:bg-gray-800 dark:border-gray-700">
           <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Nächste Termine</h3>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Nächste Termine</h3>
             <div className="space-y-3">
               {clientData.upcomingAppointments.map((appointment, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                   <div>
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       {formatDate(appointment.date, 'short')}
                     </p>
-                    <p className="text-xs text-gray-500">{appointment.time} - {appointment.type}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{appointment.time} - {appointment.type}</p>
                   </div>
-                  <CalendarIcon className="h-5 w-5 text-gray-400" />
+                  <CalendarIcon className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                 </div>
               ))}
             </div>
-            <div className="mt-4 pt-4 border-t">
-              <Link href="/dashboard/calendar" className="text-sm text-primary-600 hover:text-primary-700 font-medium">
+            <div className="mt-4 pt-4 border-t dark:border-gray-700">
+              <Link href="/dashboard/calendar" className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium">
                 Alle Termine anzeigen →
               </Link>
             </div>
           </div>
         </div>
 
-        <div className="card">
+        <div className="card dark:bg-gray-800 dark:border-gray-700">
           <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Schnellaktionen</h3>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Schnellaktionen</h3>
             <div className="space-y-2">
               <button className="w-full btn-primary text-sm">
                 Neue Messung
@@ -417,9 +417,9 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
 
       {/* Notes */}
       {(clientData.notes || isEditMode) && (
-        <div className="card">
+        <div className="card dark:bg-gray-800 dark:border-gray-700">
           <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-3">Trainer-Notizen</h3>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">Trainer-Notizen</h3>
             {isEditMode ? (
               <EditableField
                 value={clientData.notes}
@@ -431,7 +431,7 @@ export default function ClientDetailPage({ params }: { params: { id: string } })
                 className="mt-2"
               />
             ) : (
-              <p className="text-sm text-gray-600 leading-relaxed">{clientData.notes}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{clientData.notes}</p>
             )}
           </div>
         </div>

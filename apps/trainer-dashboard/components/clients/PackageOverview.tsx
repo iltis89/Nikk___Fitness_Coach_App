@@ -7,7 +7,7 @@ import {
   ArrowTrendingUpIcon,
   BellIcon,
 } from '@heroicons/react/24/outline';
-import { PACKAGE_COLORS, PACKAGE_LABELS, PackageType } from '@nv/shared/src/types/package';
+import { PACKAGE_COLORS, PACKAGE_LABELS, PackageType } from '@/types/package';
 import PackageCard from './PackageCard';
 
 interface PackageData {
@@ -124,43 +124,43 @@ export default function PackageOverview({ searchTerm }: PackageOverviewProps) {
     <div className="flex flex-col gap-6">
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="bg-white dark:bg-[rgb(20,25,45)] rounded-xl border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Aktive Pakete</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.active}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Aktive Pakete</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-50">{stats.active}</p>
             </div>
-            <UserGroupIcon className="h-8 w-8 text-gray-400" />
+            <UserGroupIcon className="h-8 w-8 text-gray-400 dark:text-gray-500" />
           </div>
         </div>
         
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="bg-white dark:bg-[rgb(20,25,45)] rounded-xl border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Ablaufend</p>
-              <p className="text-2xl font-bold text-yellow-600">{stats.expiring}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Ablaufend</p>
+              <p className="text-2xl font-bold text-warning-600 dark:text-warning-500">{stats.expiring}</p>
             </div>
-            <ExclamationTriangleIcon className="h-8 w-8 text-yellow-500" />
+            <ExclamationTriangleIcon className="h-8 w-8 text-warning-500" />
           </div>
         </div>
         
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="bg-white dark:bg-[rgb(20,25,45)] rounded-xl border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Gesamtwert</p>
-              <p className="text-2xl font-bold text-gray-900">€{stats.revenue.toLocaleString()}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Gesamtwert</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-50">€{stats.revenue.toLocaleString()}</p>
             </div>
-            <ArrowTrendingUpIcon className="h-8 w-8 text-green-500" />
+            <ArrowTrendingUpIcon className="h-8 w-8 text-success-500 dark:text-success-400" />
           </div>
         </div>
         
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="bg-white dark:bg-[rgb(20,25,45)] rounded-xl border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Benachrichtigungen</p>
-              <p className="text-2xl font-bold text-gray-900">3</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Benachrichtigungen</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-50">3</p>
             </div>
-            <BellIcon className="h-8 w-8 text-primary-500" />
+            <BellIcon className="h-8 w-8 text-primary-500 dark:text-primary-400" />
           </div>
         </div>
       </div>
@@ -171,8 +171,8 @@ export default function PackageOverview({ searchTerm }: PackageOverviewProps) {
           onClick={() => setFilter('all')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             filter === 'all'
-              ? 'bg-gray-900 text-white'
-              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              ? 'bg-gray-900 dark:bg-primary-600 text-white'
+              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
           }`}
         >
           Alle ({stats.total})
@@ -181,8 +181,8 @@ export default function PackageOverview({ searchTerm }: PackageOverviewProps) {
           onClick={() => setFilter('expiring')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             filter === 'expiring'
-              ? 'bg-yellow-500 text-white'
-              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              ? 'bg-warning-500 text-white dark:text-gray-900'
+              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
           }`}
         >
           <ExclamationTriangleIcon className="h-4 w-4 inline mr-1" />
@@ -195,7 +195,7 @@ export default function PackageOverview({ searchTerm }: PackageOverviewProps) {
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
               filter === type
                 ? `${PACKAGE_COLORS[type as PackageType].bg} ${PACKAGE_COLORS[type as PackageType].text} ${PACKAGE_COLORS[type as PackageType].border}`
-                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
           >
             {label}
@@ -213,7 +213,7 @@ export default function PackageOverview({ searchTerm }: PackageOverviewProps) {
       {/* Empty State */}
       {filteredPackages.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500">Keine Pakete gefunden</p>
+          <p className="text-gray-500 dark:text-gray-400">Keine Pakete gefunden</p>
         </div>
       )}
     </div>

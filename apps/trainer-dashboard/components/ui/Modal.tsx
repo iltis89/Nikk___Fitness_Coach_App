@@ -39,14 +39,14 @@ const Modal: React.FC<ModalProps> = ({
       
       {/* Modal */}
       <div className={clsx(
-        'relative w-full mx-4 bg-white rounded-xl shadow-xl',
+        'relative w-full mx-4 bg-white dark:bg-gray-800 rounded-xl shadow-xl',
         sizeClasses[size]
       )}>
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
             {title && (
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {title}
               </h3>
             )}

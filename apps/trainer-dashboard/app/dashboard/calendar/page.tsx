@@ -117,19 +117,19 @@ export default function CalendarPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Kalender</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Kalender</h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Verwalte deine Termine und Trainingseinheiten
           </p>
         </div>
         <div className="flex items-center space-x-3">
-          <div className="flex rounded-lg border border-gray-300">
+          <div className="flex rounded-lg border border-gray-300 dark:border-gray-600">
             <button
               onClick={() => setView('week')}
               className={`px-3 py-1.5 text-sm font-medium transition-colors ${
                 view === 'week'
-                  ? 'bg-primary-50 text-primary-700'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
               Woche
@@ -138,8 +138,8 @@ export default function CalendarPage() {
               onClick={() => setView('month')}
               className={`px-3 py-1.5 text-sm font-medium transition-colors ${
                 view === 'month'
-                  ? 'bg-primary-50 text-primary-700'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
               Monat
@@ -158,7 +158,7 @@ export default function CalendarPage() {
       {showAppointmentForm && (
         <div className="card">
           <div className="card-body">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Neuen Termin erstellen</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Neuen Termin erstellen</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
@@ -270,36 +270,36 @@ export default function CalendarPage() {
         <div className="card-body">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-4">
-              <button className="p-1 hover:bg-gray-100 rounded transition-colors">
-                <ChevronLeftIcon className="h-5 w-5 text-gray-600" />
+              <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
+                <ChevronLeftIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
               </button>
-              <h2 className="text-lg font-semibold text-gray-900">Januar 2024 - Woche 4</h2>
-              <button className="p-1 hover:bg-gray-100 rounded transition-colors">
-                <ChevronRightIcon className="h-5 w-5 text-gray-600" />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Januar 2024 - Woche 4</h2>
+              <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
+                <ChevronRightIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
               </button>
             </div>
-            <button className="text-sm text-primary-600 hover:text-primary-700">
+            <button className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">
               Heute
             </button>
           </div>
 
           <div className="overflow-x-auto">
             <div className="min-w-[800px]">
-              <div className="grid grid-cols-8 gap-0 border-t border-l">
-                <div className="border-r border-b p-2 bg-gray-50"></div>
+              <div className="grid grid-cols-8 gap-0 border-t border-l dark:border-gray-700">
+                <div className="border-r border-b dark:border-gray-700 p-2 bg-gray-50 dark:bg-gray-800"></div>
                 {currentWeek.map((day, index) => (
-                  <div key={index} className="border-r border-b p-2 text-center bg-gray-50">
-                    <p className="text-xs font-medium text-gray-600">{day.day}</p>
+                  <div key={index} className="border-r border-b dark:border-gray-700 p-2 text-center bg-gray-50 dark:bg-gray-800">
+                    <p className="text-xs font-medium text-gray-600 dark:text-gray-400">{day.day}</p>
                     <p className={`text-sm font-semibold ${
-                      day.date === 22 ? 'text-primary-600' : 'text-gray-900'
+                      day.date === 22 ? 'text-primary-600 dark:text-primary-400' : 'text-gray-900 dark:text-gray-100'
                     }`}>{day.date}</p>
                   </div>
                 ))}
               </div>
 
               {timeSlots.map((time) => (
-                <div key={time} className="grid grid-cols-8 gap-0 border-l">
-                  <div className="border-r border-b p-2 text-xs text-gray-500 bg-gray-50">
+                <div key={time} className="grid grid-cols-8 gap-0 border-l dark:border-gray-700">
+                  <div className="border-r border-b dark:border-gray-700 p-2 text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800">
                     {time}
                   </div>
                   {currentWeek.map((day, index) => {
@@ -307,7 +307,7 @@ export default function CalendarPage() {
                     const appointment = dayAppointments.find(apt => apt.time === time);
                     
                     return (
-                      <div key={index} className="border-r border-b p-1 min-h-[60px] relative hover:bg-gray-50">
+                      <div key={index} className="border-r border-b dark:border-gray-700 p-1 min-h-[60px] relative hover:bg-gray-50 dark:hover:bg-gray-800">
                         {appointment && (
                           <div className={`${appointment.color} text-white rounded p-2 text-xs cursor-pointer hover:opacity-90 transition-opacity`}>
                             <p className="font-medium">{appointment.client}</p>
@@ -327,14 +327,14 @@ export default function CalendarPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="card">
           <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Heutige Termine</h3>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Heutige Termine</h3>
             <div className="space-y-3">
               {appointments.filter(apt => apt.date === '2024-01-22').map((appointment) => (
                 <div key={appointment.id} className="flex items-start space-x-3">
                   <div className={`w-2 h-2 ${appointment.color} rounded-full mt-2`}></div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">{appointment.client}</p>
-                    <div className="flex items-center space-x-3 text-xs text-gray-500">
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{appointment.client}</p>
+                    <div className="flex items-center space-x-3 text-xs text-gray-500 dark:text-gray-400">
                       <span className="flex items-center">
                         <ClockIcon className="mr-1 h-3 w-3" />
                         {appointment.time} - {appointment.duration} Min
@@ -353,22 +353,22 @@ export default function CalendarPage() {
 
         <div className="card">
           <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Verfügbarkeit diese Woche</h3>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Verfügbarkeit diese Woche</h3>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Gebuchte Termine</span>
-                <span className="font-medium text-gray-900">18</span>
+                <span className="text-gray-600 dark:text-gray-400">Gebuchte Termine</span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">18</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Freie Slots</span>
+                <span className="text-gray-600 dark:text-gray-400">Freie Slots</span>
                 <span className="font-medium text-green-600">22</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Auslastung</span>
-                <span className="font-medium text-gray-900">45%</span>
+                <span className="text-gray-600 dark:text-gray-400">Auslastung</span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">45%</span>
               </div>
               <div className="mt-3">
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                   <div className="bg-primary-600 h-2 rounded-full" style={{ width: '45%' }}></div>
                 </div>
               </div>
@@ -378,19 +378,19 @@ export default function CalendarPage() {
 
         <div className="card">
           <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Nächste freie Termine</h3>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Nächste freie Termine</h3>
             <div className="space-y-2 text-sm">
-              <button className="w-full text-left p-2 rounded hover:bg-gray-50 transition-colors">
-                <p className="font-medium text-gray-900">Heute, 11:30 - 12:30</p>
-                <p className="text-xs text-gray-500">60 Minuten verfügbar</p>
+              <button className="w-full text-left p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <p className="font-medium text-gray-900 dark:text-gray-100">Heute, 11:30 - 12:30</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">60 Minuten verfügbar</p>
               </button>
-              <button className="w-full text-left p-2 rounded hover:bg-gray-50 transition-colors">
-                <p className="font-medium text-gray-900">Heute, 17:30 - 19:00</p>
-                <p className="text-xs text-gray-500">90 Minuten verfügbar</p>
+              <button className="w-full text-left p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <p className="font-medium text-gray-900 dark:text-gray-100">Heute, 17:30 - 19:00</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">90 Minuten verfügbar</p>
               </button>
-              <button className="w-full text-left p-2 rounded hover:bg-gray-50 transition-colors">
-                <p className="font-medium text-gray-900">Morgen, 08:00 - 09:00</p>
-                <p className="text-xs text-gray-500">60 Minuten verfügbar</p>
+              <button className="w-full text-left p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <p className="font-medium text-gray-900 dark:text-gray-100">Morgen, 08:00 - 09:00</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">60 Minuten verfügbar</p>
               </button>
             </div>
           </div>

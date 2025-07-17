@@ -3,7 +3,7 @@
 import React from 'react';
 import { XMarkIcon, ChartBarIcon, CalendarIcon, ScaleIcon } from '@heroicons/react/24/outline';
 import { Modal, ClientAvatar } from '@/components/ui';
-import { PackageType } from '@nv/shared/src/types/package';
+import { PackageType } from '@/types/package';
 import { formatDate } from '@/utils/dateFormatters';
 import { BodyCompositionChart } from './BodyCompositionChart';
 

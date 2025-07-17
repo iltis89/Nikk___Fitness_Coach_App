@@ -13,4 +13,5 @@ export { LoadingSpinner } from './LoadingSpinner';
 export { Logo } from './Logo';
 export { Modal } from './Modal';
 export { Skeleton } from './Skeleton';
+export { SuccessIndicator, SuccessBadge, ProgressCard } from './SuccessIndicator';
 export { Tooltip } from './Tooltip';

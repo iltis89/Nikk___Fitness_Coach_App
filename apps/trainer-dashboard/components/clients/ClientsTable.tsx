@@ -8,7 +8,7 @@ import {
   ChartBarIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
-import { PACKAGE_COLORS, PACKAGE_LABELS, PackageType } from '@nv/shared/src/types/package';
+import { PACKAGE_COLORS, PACKAGE_LABELS, PackageType } from '@/types/package';
 import { ClientAvatar } from '@/components/ui';
 
 interface Client {
@@ -107,7 +107,7 @@ export default function ClientsTable({ searchTerm }: ClientsTableProps) {
         {filteredClients.map((client) => (
           <div
             key={client.id}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 touch-manipulation"
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 touch-manipulation"
             onClick={() => handleClientClick(client.id)}
           >
             {/* Client Header */}
@@ -119,7 +119,7 @@ export default function ClientsTable({ searchTerm }: ClientsTableProps) {
                   size="sm"
                 />
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900">{client.name}</h3>
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">{client.name}</h3>
                   {client.activePackage && (
                     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                       PACKAGE_COLORS[client.activePackage.type].bg
@@ -131,17 +131,17 @@ export default function ClientsTable({ searchTerm }: ClientsTableProps) {
                   )}
                 </div>
               </div>
-              <ChartBarIcon className="h-5 w-5 text-gray-400" />
+              <ChartBarIcon className="h-5 w-5 text-gray-400 dark:text-gray-500" />
             </div>
 
             {/* Contact Info */}
-            <div className="space-y-2 mb-3 text-sm text-gray-600">
+            <div className="space-y-2 mb-3 text-sm text-gray-600 dark:text-gray-400">
               <div className="flex items-center gap-2">
-                <EnvelopeIcon className="h-4 w-4 text-gray-400" />
+                <EnvelopeIcon className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <span className="truncate">{client.email}</span>
               </div>
               <div className="flex items-center gap-2">
-                <PhoneIcon className="h-4 w-4 text-gray-400" />
+                <PhoneIcon className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                 <span>{client.phone}</span>
               </div>
             </div>
@@ -150,12 +150,12 @@ export default function ClientsTable({ searchTerm }: ClientsTableProps) {
             {client.activePackage && (
               <div className="mb-3">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-gray-500">Nutzung</span>
-                  <span className="text-sm font-medium text-gray-900">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Nutzung</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {client.activePackage.usagePercentage}%
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                   <div
                     className={`h-2 rounded-full transition-all duration-300 ${
                       client.activePackage.usagePercentage >= 80
@@ -168,11 +168,11 @@ export default function ClientsTable({ searchTerm }: ClientsTableProps) {
                   />
                 </div>
                 <div className="flex items-center justify-between mt-1">
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {client.activePackage.name}
                   </p>
                   {client.activePackage.expiresIn <= 7 && (
-                    <span className="flex items-center gap-1 text-xs text-yellow-600">
+                    <span className="flex items-center gap-1 text-xs text-yellow-600 dark:text-yellow-400">
                       <ExclamationTriangleIcon className="h-3 w-3" />
                       {client.activePackage.expiresIn}d
                     </span>
@@ -182,14 +182,14 @@ export default function ClientsTable({ searchTerm }: ClientsTableProps) {
             )}
 
             {/* Sessions Info */}
-            <div className="flex items-center justify-between border-t border-gray-100 pt-3">
-              <div className="text-xs text-gray-500">
+            <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-700 pt-3">
+              <div className="text-xs text-gray-500 dark:text-gray-400">
                 <div>Nächster Termin</div>
-                <div className="font-medium text-gray-900">{formatDate(client.nextSession)}</div>
+                <div className="font-medium text-gray-900 dark:text-gray-100">{formatDate(client.nextSession)}</div>
               </div>
               <div className="text-right">
-                <div className="text-sm font-medium text-gray-900">{client.totalSessions}</div>
-                <div className="text-xs text-gray-500">Sessions</div>
+                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{client.totalSessions}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">Sessions</div>
               </div>
             </div>
           </div>
@@ -197,33 +197,33 @@ export default function ClientsTable({ searchTerm }: ClientsTableProps) {
       </div>
 
       {/* Desktop Table View */}
-      <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="hidden md:block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-50 dark:bg-gray-900">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Kunde
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Aktives Paket
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Nutzung
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Termine
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Status
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
             {filteredClients.map((client) => (
               <tr
                 key={client.id}
-                className="hover:bg-gray-50 transition-colors cursor-pointer"
+                className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                 onClick={() => handleClientClick(client.id)}
               >
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -236,8 +236,8 @@ export default function ClientsTable({ searchTerm }: ClientsTableProps) {
                       />
                     </div>
                     <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">{client.name}</div>
-                      <div className="text-sm text-gray-500 flex items-center gap-4">
+                      <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{client.name}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-4">
                         <span className="flex items-center gap-1">
                           <EnvelopeIcon className="h-3 w-3" />
                           {client.email}
@@ -260,24 +260,24 @@ export default function ClientsTable({ searchTerm }: ClientsTableProps) {
                       } border`}>
                         {PACKAGE_LABELS[client.activePackage.type]}
                       </span>
-                      <p className="text-xs text-gray-500 mt-1">{client.activePackage.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{client.activePackage.name}</p>
                     </div>
                   ) : (
-                    <span className="text-sm text-gray-400">Kein aktives Paket</span>
+                    <span className="text-sm text-gray-400 dark:text-gray-500">Kein aktives Paket</span>
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {client.activePackage ? (
                     <div className="w-32">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                           {client.activePackage.usagePercentage}%
                         </span>
                         {client.activePackage.expiresIn <= 7 && (
                           <ExclamationTriangleIcon className="h-4 w-4 text-yellow-500" />
                         )}
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                         <div
                           className={`h-2 rounded-full transition-all duration-300 ${
                             client.activePackage.usagePercentage >= 80
@@ -289,30 +289,30 @@ export default function ClientsTable({ searchTerm }: ClientsTableProps) {
                           style={{ width: `${client.activePackage.usagePercentage}%` }}
                         />
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Läuft ab in {client.activePackage.expiresIn} Tagen
                       </p>
                     </div>
                   ) : (
-                    <span className="text-sm text-gray-400">-</span>
+                    <span className="text-sm text-gray-400 dark:text-gray-500">-</span>
                   )}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                   <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-1">
-                      <CalendarIcon className="h-4 w-4 text-gray-400" />
+                      <CalendarIcon className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                       <span>Letztes: {formatDate(client.lastSession)}</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <CalendarIcon className="h-4 w-4 text-gray-400" />
+                      <CalendarIcon className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                       <span>Nächstes: {formatDate(client.nextSession)}</span>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center gap-2">
-                    <ChartBarIcon className="h-4 w-4 text-gray-400" />
-                    <span className="text-sm text-gray-900">{client.totalSessions} Sessions</span>
+                    <ChartBarIcon className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+                    <span className="text-sm text-gray-900 dark:text-gray-100">{client.totalSessions} Sessions</span>
                   </div>
                 </td>
               </tr>

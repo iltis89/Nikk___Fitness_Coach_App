@@ -17,13 +17,13 @@ export default function DashboardWidget({
   children,
 }: DashboardWidgetProps) {
   return (
-    <div className={`h-full bg-white rounded-lg border shadow-sm overflow-hidden transition-all duration-200 ${
+    <div className={`h-full bg-white dark:bg-[rgb(20,25,45)] rounded-lg border shadow-sm overflow-hidden transition-all duration-200 ${
       isEditMode 
-        ? 'border-primary-300 shadow-primary-100' 
-        : 'border-gray-100 hover:shadow-md hover:border-gray-200'
+        ? 'border-primary-300 dark:border-primary-600 shadow-primary-100 dark:shadow-primary-900/20' 
+        : 'border-gray-100 dark:border-gray-700 hover:shadow-md dark:hover:shadow-gray-900/30 hover:border-gray-200 dark:hover:border-gray-600'
     }`}>
       {isEditMode && (
-        <div className="absolute inset-x-0 top-0 bg-primary-600 px-3 py-1.5 z-10">
+        <div className="absolute inset-x-0 top-0 bg-primary-600 dark:bg-primary-700 px-3 py-1.5 z-10">
           <div className="flex items-center justify-between">
             <div className="widget-handle cursor-move flex-1 select-none">
               <span className="text-xs font-medium text-white flex items-center gap-1.5">

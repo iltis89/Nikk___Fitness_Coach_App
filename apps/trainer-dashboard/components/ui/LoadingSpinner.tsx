@@ -18,14 +18,14 @@ export function LoadingSpinner({ size = 'md', text = 'Lädt...' }: LoadingSpinne
         <Logo 
           size={size === 'sm' ? 'xs' : size} 
           variant="icon" 
-          className="text-gray-300"
+          className="text-gray-300 dark:text-gray-600"
         />
         <div className={`absolute inset-0 ${sizeClasses[size]}`}>
           <div className="h-full w-full animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
         </div>
       </div>
       {text && (
-        <p className="mt-4 text-sm text-gray-600">{text}</p>
+        <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">{text}</p>
       )}
     </div>
   );

@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { body, param, validationResult } from 'express-validator';
+import { Router, Response, NextFunction } from 'express';
+import { body, validationResult } from 'express-validator';
 import { PrismaClient } from '@prisma/client';
 import { AuthRequest } from '../types';
 
@@ -7,7 +7,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 // Validation middleware
-const handleValidationErrors = (req: any, res: any, next: any) => {
+const handleValidationErrors = (req: AuthRequest, res: Response, next: NextFunction): any => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -32,7 +32,7 @@ router.post('/', [
   body('skinfolds').optional().isObject(),
   body('notes').optional().isString(),
   handleValidationErrors
-], async (req: AuthRequest, res) => {
+], async (req: AuthRequest, res: Response) => {
   try {
     // Verify client ownership
     const client = await prisma.client.findFirst({
@@ -78,12 +78,12 @@ router.post('/', [
       success: true,
       data: measurement
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(400).json({
       success: false,
       error: {
         code: 'CREATE_FAILED',
-        message: error.message
+        message: error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten'
       }
     });
   }

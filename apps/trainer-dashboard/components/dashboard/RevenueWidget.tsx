@@ -33,12 +33,12 @@ export function RevenueWidget() {
         <div className="w-full flex items-center justify-between gap-4">
           {/* Current Revenue */}
           <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="rounded-lg bg-primary-50 p-2.5">
-              <CurrencyEuroIcon className="h-5 w-5 text-primary-600" />
+            <div className="rounded-lg bg-primary-50 dark:bg-primary-900/20 p-2.5">
+              <CurrencyEuroIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
             </div>
             <div>
-              <p className="text-xs font-medium text-gray-500 whitespace-nowrap">Aktueller Umsatz</p>
-              <h3 className="text-xl font-bold text-gray-900 whitespace-nowrap">
+              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">Aktueller Umsatz</p>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-50 whitespace-nowrap">
                 {formatCurrency(revenueData.current)}
               </h3>
             </div>
@@ -47,14 +47,14 @@ export function RevenueWidget() {
           {/* Progress Bar */}
           <div className="flex-1 max-w-md px-4">
             <div className="flex justify-between items-center mb-1.5">
-              <span className="text-xs font-medium text-gray-600 whitespace-nowrap">
+              <span className="text-xs font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">
                 Monatsziel: {formatCurrency(revenueData.monthlyTarget)}
               </span>
-              <span className="text-xs font-bold text-gray-900 ml-2">
+              <span className="text-xs font-bold text-gray-900 dark:text-gray-50 ml-2">
                 {progressPercentage.toFixed(0)}%
               </span>
             </div>
-            <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+            <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-500 relative ${
                   progressPercentage >= 100 
@@ -77,9 +77,9 @@ export function RevenueWidget() {
           {/* Trend & Comparison */}
           <div className="flex items-center gap-3 flex-shrink-0">
             <div className="text-right">
-              <p className="text-xs font-medium text-gray-500 whitespace-nowrap">vs. letzter Monat</p>
+              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">vs. letzter Monat</p>
               <div className={`inline-flex items-center gap-1 mt-0.5 ${
-                isPositiveTrend ? 'text-success-600' : 'text-error-600'
+                isPositiveTrend ? 'text-success-600 dark:text-success-400' : 'text-error-600 dark:text-error-400'
               }`}>
                 {isPositiveTrend ? (
                   <ArrowTrendingUpIcon className="h-4 w-4 flex-shrink-0" />
@@ -91,11 +91,11 @@ export function RevenueWidget() {
                 </span>
               </div>
             </div>
-            <div className="w-px h-10 bg-gray-200" />
+            <div className="w-px h-10 bg-gray-200 dark:bg-gray-700" />
             <div className="text-right">
-              <p className="text-xs font-medium text-gray-500 whitespace-nowrap">Differenz</p>
+              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">Differenz</p>
               <p className={`text-sm font-bold whitespace-nowrap ${
-                isPositiveTrend ? 'text-success-600' : 'text-error-600'
+                isPositiveTrend ? 'text-success-600 dark:text-success-400' : 'text-error-600 dark:text-error-400'
               }`}>
                 {isPositiveTrend ? '+' : ''}{formatCurrency(revenueData.current - revenueData.previous)}
               </p>

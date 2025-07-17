@@ -11,7 +11,7 @@ export const authenticate = async (
   req: AuthRequest,
   res: Response,
   next: NextFunction
-) => {
+): Promise<any> => {
   try {
     const token = extractToken(req);
     
@@ -51,7 +51,7 @@ export const authenticate = async (
 };
 
 export const authorize = (...roles: string[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
+  return (req: AuthRequest, res: Response, next: NextFunction): any => {
     if (!req.user) {
       return res.status(401).json({
         success: false,

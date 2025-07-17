@@ -7,7 +7,7 @@ import {
   SparklesIcon,
 } from '@heroicons/react/24/outline';
 import { ClientAvatar } from '@/components/ui';
-import { PackageType } from '@nv/shared/src/types/package';
+import { PackageType } from '@/types/package';
 
 interface ComparisonData {
   id: string;

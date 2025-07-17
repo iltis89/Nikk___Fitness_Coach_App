@@ -10,7 +10,7 @@ import {
   ArrowRightIcon
 } from '@heroicons/react/24/outline';
 import { ClientAvatar } from '@/components/ui';
-import { PackageType } from '@nv/shared/src/types/package';
+import { PackageType } from '@/types/package';
 
 const clients = [
   {
@@ -50,8 +50,8 @@ export default function TrainingPlansPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Training</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Training</h1>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
           Wähle einen Kunden aus, um dessen Trainingspläne zu verwalten
         </p>
       </div>
@@ -65,7 +65,7 @@ export default function TrainingPlansPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <MagnifyingGlassIcon className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+          <MagnifyingGlassIcon className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 dark:text-gray-500" />
         </div>
         <select
           className="input w-full sm:w-auto"
@@ -94,46 +94,46 @@ export default function TrainingPlansPage() {
                     size="md"
                   />
                   <div className="ml-3">
-                    <h3 className="text-base font-semibold text-gray-900">{client.name}</h3>
-                    <p className="text-sm text-gray-500">{client.age} Jahre</p>
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">{client.name}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{client.age} Jahre</p>
                   </div>
                 </div>
-                <ArrowRightIcon className="h-5 w-5 text-gray-400 group-hover:text-primary-600 transition-colors" />
+                <ArrowRightIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors" />
               </div>
 
               <div className="space-y-3">
                 {client.status === 'active' ? (
                   <>
                     <div>
-                      <p className="text-xs text-gray-500">Aktueller Plan</p>
-                      <p className="text-sm font-medium text-gray-900">{client.currentPlan}</p>
-                      <p className="text-xs text-gray-600 mt-1">{client.trainingStyle} • {client.currentPhase}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Aktueller Plan</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{client.currentPlan}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{client.trainingStyle} • {client.currentPhase}</p>
                     </div>
                     
                     <div>
-                      <p className="text-xs text-gray-500">Wochenfortschritt</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Wochenfortschritt</p>
                       <div className="mt-1 flex items-center space-x-2">
                         <div className="flex-1">
-                          <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                             <div 
-                              className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                              className="bg-primary-600 dark:bg-primary-500 h-2 rounded-full transition-all duration-300"
                               style={{ width: `${(client.weeklyProgress / client.weeklyGoal) * 100}%` }}
                             />
                           </div>
                         </div>
-                        <span className="text-xs font-medium text-gray-700">
+                        <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                           {client.weeklyProgress}/{client.weeklyGoal}
                         </span>
                       </div>
                     </div>
 
                     <div>
-                      <p className="text-xs text-gray-500">Nächstes Workout</p>
-                      <p className="text-sm font-medium text-gray-900">{client.nextWorkout}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Nächstes Workout</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{client.nextWorkout}</p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t">
-                      <span className="text-xs text-gray-500">
+                    <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
                         Letztes Training: {new Date(client.lastWorkout).toLocaleDateString('de-DE')}
                       </span>
                       <span className="badge badge-success">Aktiv</span>
@@ -141,13 +141,13 @@ export default function TrainingPlansPage() {
                   </>
                 ) : (
                   <div className="text-center py-4">
-                    <p className="text-sm text-gray-500 mb-2">Kein aktiver Trainingsplan</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Kein aktiver Trainingsplan</p>
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
                         router.push(`/dashboard/training-plans/client/${client.id}?action=new-plan`);
                       }}
-                      className="text-sm text-primary-600 hover:text-primary-700"
+                      className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
                     >
                       Plan erstellen →
                     </button>
@@ -162,31 +162,31 @@ export default function TrainingPlansPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="card">
           <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Statistiken</h3>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Statistiken</h3>
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm text-gray-600">Aktive Kunden</span>
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Aktive Kunden</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                     {clients.filter(c => c.status === 'active').length}
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                   <div 
-                    className="bg-primary-600 h-2 rounded-full"
+                    className="bg-primary-600 dark:bg-primary-500 h-2 rounded-full"
                     style={{ width: `${(clients.filter(c => c.status === 'active').length / clients.length) * 100}%` }}
                   />
                 </div>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-2">Trainingseinheiten diese Woche</p>
-                <p className="text-2xl font-semibold text-gray-900">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Trainingseinheiten diese Woche</p>
+                <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
                   {clients.reduce((sum, client) => sum + client.weeklyProgress, 0)}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-2">Durchschnittliche Trainingshäufigkeit</p>
-                <p className="text-lg font-semibold text-gray-900">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Durchschnittliche Trainingshäufigkeit</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                   {(clients.filter(c => c.weeklyGoal > 0).reduce((sum, client) => sum + client.weeklyProgress, 0) / 
                     clients.filter(c => c.weeklyGoal > 0).length).toFixed(1)} / Woche
                 </p>
@@ -197,7 +197,7 @@ export default function TrainingPlansPage() {
 
         <div className="card">
           <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Schnellaktionen</h3>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Schnellaktionen</h3>
             <div className="space-y-2">
               <button className="w-full btn-primary">
                 <PlusIcon className="mr-2 h-5 w-5" />
@@ -217,7 +217,7 @@ export default function TrainingPlansPage() {
 
         <div className="card">
           <div className="card-body">
-            <h3 className="text-base font-semibold text-gray-900 mb-4">Anstehende Workouts</h3>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Anstehende Workouts</h3>
             <div className="space-y-3">
               {clients
                 .filter(c => c.status === 'active' && c.nextWorkout)
@@ -225,12 +225,12 @@ export default function TrainingPlansPage() {
                 .map((client) => (
                   <div key={client.id} className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-900">{client.name}</p>
-                      <p className="text-xs text-gray-500">{client.nextWorkout}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{client.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{client.nextWorkout}</p>
                     </div>
                     <button 
                       onClick={() => handleClientClick(client.id)}
-                      className="text-xs text-primary-600 hover:text-primary-700"
+                      className="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
                     >
                       Anzeigen →
                     </button>
