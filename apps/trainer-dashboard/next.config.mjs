@@ -14,9 +14,9 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   
-  // Disable static page generation for error pages
-  experimental: {
-    runtime: 'nodejs',
+  // Disable static optimization for specific pages
+  generateBuildId: async () => {
+    return 'build-' + Date.now()
   },
   
   // Webpack-Optimierungen für Hero Icons
