@@ -4,10 +4,11 @@ buildCommand = "npm install && turbo run build --filter=trainer-dashboard"
 
 [deploy]
 startCommand = "./start.sh"
-healthcheckPath = "/"
-healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
+# Health check temporär deaktiviert für Debugging
+# healthcheckPath = "/api/health"
+# healthcheckTimeout = 300
 
 [[services]]
 name = "nv-coaching-trainer-dashboard"

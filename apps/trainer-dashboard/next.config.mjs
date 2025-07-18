@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Output für Railway
-  output: 'standalone',
+  // Output für Railway - temporär deaktiviert wegen Start-Problemen
+  // output: 'standalone',
   
   // Optimierungen für Build-Performance
   swcMinify: true,
