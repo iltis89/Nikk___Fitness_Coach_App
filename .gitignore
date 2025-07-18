@@ -31,8 +31,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# Vercel
-.vercel/
+# Railway
+.railway/
 
 # TypeScript
 *.tsbuildinfo
@@ -60,5 +60,11 @@ Thumbs.db
 # Logs
 logs/
 *.log
-.vercel
 apps.zip
+
+# Feedback screenshots
+feedback-screenshots/archive/
+feedback-screenshots/processed/
+
+# Generated files  
+.feedback-processed.txt

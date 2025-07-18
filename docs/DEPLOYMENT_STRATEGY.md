@@ -28,14 +28,14 @@ Reales Test-Setup für Nikk (Trainer) und 5 Testkunden, damit beide Seiten (Dash
 - **Kosten:** Kostenlos (500MB DB, 2GB Bandwidth, 50k Auth Users)
 
 ### 2. **Trainer Dashboard (Web)**
-- **Service:** Vercel
+- **Service:** Railway
 - **Technologie:** Next.js
 - **Features:**
   - Automatische Deploys bei Git Push
   - SSL Zertifikat inklusive
-  - Edge Functions Support
-- **URL:** `https://nv-dashboard.vercel.app`
-- **Kosten:** Kostenlos
+  - Integrierte PostgreSQL möglich
+- **URL:** `https://nv-dashboard.up.railway.app`
+- **Kosten:** $5 Credit/Monat (Hobby Plan)
 
 ### 3. **Mobile App**
 - **Service:** Expo + EAS (Expo Application Services)

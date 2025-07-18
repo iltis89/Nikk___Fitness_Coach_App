@@ -1,6 +1,0 @@
-{
-  "buildCommand": "npm install && turbo run build --filter=trainer-dashboard",
-  "outputDirectory": "apps/trainer-dashboard/.next",
-  "framework": "nextjs",
-  "installCommand": "npm install"
-}

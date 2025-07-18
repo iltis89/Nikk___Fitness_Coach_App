@@ -55,7 +55,7 @@ Dies ist eine Fitness-Coaching-Plattform für Nikk Viererbl (NV Coaching), beste
 - **Trainer-Dashboard**: Next.js 14, TypeScript, Tailwind CSS, Zustand, TanStack Query
 - **Mobile App**: React Native mit Expo
 - **KI-Services**: OpenAI/Claude API, Vector DB (Pinecone/Weaviate)
-- **Deployment**: Vercel (Web), Railway/Render (Backend), Expo EAS (Mobile)
+- **Deployment**: Railway (Web & Backend), Expo EAS (Mobile)
 
 ## Projektstruktur
 ```
