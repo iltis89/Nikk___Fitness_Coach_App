@@ -683,6 +683,21 @@ export default function WorkoutDetailPage() {
                               </div>
                             ))}
                           </div>
+                          
+                          {/* Geräte-Einstellungen */}
+                          {exercise.exercise?.equipment && exercise.exercise.equipment !== 'Körpergewicht' && (
+                            <div className="mt-4">
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Geräte-Einstellungen für {exercise.exercise.equipment}
+                              </label>
+                              <textarea
+                                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors resize-none"
+                                placeholder="z.B. Sitzposition: 5, Griffhöhe: 3, Polsterposition: Oberschenkel..."
+                                rows={2}
+                                defaultValue={(exercise as any).equipmentSettings || ''}
+                              />
+                            </div>
+                          )}
                         </div>
                       );
                     })}

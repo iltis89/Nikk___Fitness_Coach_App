@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Logo } from '@/components/ui/Logo';
 import { Button } from '@/components/ui/Button';
 import {
   HomeIcon,
@@ -41,7 +40,7 @@ export default function Sidebar() {
   return (
     <div className="flex h-full flex-col bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-colors duration-200">
       <div className="flex h-16 items-center justify-center border-b border-gray-200 dark:border-gray-700">
-        <Logo size="sm" variant="icon" className="text-primary-600 dark:text-primary-500" />
+        {/* Logo entfernt */}
       </div>
       
       <nav className="flex-1 px-3 py-4">
