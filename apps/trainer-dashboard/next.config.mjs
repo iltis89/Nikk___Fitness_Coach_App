@@ -3,8 +3,10 @@ const nextConfig = {
   // Output für Railway - temporär deaktiviert wegen Start-Problemen
   // output: 'standalone',
   
-  // Optimierungen für Build-Performance
-  swcMinify: true,
+  // Experimental features für bessere Dev-Performance
+  experimental: {
+    optimizeCss: false, // CSS-Optimierung nur für Production
+  },
   
   // TypeScript und ESLint Optimierungen
   typescript: {

@@ -39,6 +39,7 @@
   },
   "packageManager": "npm@9.8.1",
   "dependencies": {
-    "@headlessui/react": "^2.2.4"
+    "@headlessui/react": "^2.2.4",
+    "@swc/helpers": "^0.5.17"
   }
 }
